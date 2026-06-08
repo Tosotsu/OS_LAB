@@ -1,137 +1,36 @@
-# Operating Systems Lab Programs
+# OS_LAB — Operating Systems Lab Experiments
 
-This repository contains various C programs demonstrating operating system concepts and system calls.
+Collection of C programs and documentation covering core OS concepts, written as lab assignments. Covers scheduling, memory management, page replacement, and disk scheduling algorithms.
 
-## Experiment 3: System Calls and Process Management
+## What It Does
 
-### 1. Fork System Call (`fork.c`)
-This program demonstrates the use of the fork() system call to create child processes.
-- Creates a child process using fork()
-- Shows process IDs of both parent and child processes
-- Implements proper process synchronization using wait()
+Implements and compares classic OS algorithms from scratch in C:
 
-Key concepts:
-- Process creation
-- Parent-child relationship
-- Process IDs
-- Process synchronization
+| Experiment | Topic |
+|------------|-------|
+| exp2 | CPU Scheduling (FCFS, SJF, Round Robin, Priority) |
+| exp3 | Process Synchronization |
+| exp4 | Deadlock Detection & Avoidance |
+| exp5 | Inter-Process Communication |
+| exp6 | Memory Management (contiguous allocation) |
+| exp7 | Virtual Memory |
+| exp8 | Memory Management (paging, segmentation) |
+| exp9 | Page Replacement (FIFO, LRU, Optimal) |
+| exp10 | Disk Scheduling (FCFS, SSTF, SCAN, C-SCAN) |
 
-### 2. File Status Information (`stat.c`)
-This program shows how to get file information using the stat() system call.
-- Takes a filename as input
-- Displays various file attributes:
-  - Last access time
-  - Inode number
-  - Block size
-  - File mode
-  - User ID
-  - Group ID
+## Tech Stack
 
-Key concepts:
-- File metadata
-- System calls for file information
-- File permissions and ownership
+- **Language:** C
+- **Companion docs:** Markdown explanations for each experiment
 
-### 3. Directory Operations (`dirent.c`)
-This program demonstrates directory operations using the dirent.h library.
-- Takes a directory path as input
-- Lists all files and directories in the specified path
-- Shows inode numbers and names of directory entries
+## Practical Use
 
-Key concepts:
-- Directory traversal
-- File system structure
-- Directory entries
+Reference implementations for OS course lab work — each experiment includes working C code plus a markdown explanation of the algorithm's logic, trade-offs, and sample output. Useful for exam prep and understanding how real OS kernels manage resources.
 
-## Experiment 4: Inter-Process Communication
+## Run Any Experiment
 
-### Client-Server Communication
-- `server.c`: Implements a basic server using socket programming
-- `client.c`: Implements a client that connects to the server
-- Demonstrates socket-based communication between processes
+```bash
+gcc exp2/program.c -o out && ./out
+```
 
-Key concepts:
-- Socket programming
-- Client-server architecture
-- Inter-process communication
-
-## Experiment 5: Process Synchronization
-
-### Semaphore Implementation (`semaphore.c`)
-- Implements process synchronization using semaphores
-- Demonstrates solution to producer-consumer problem
-- Handles critical section and mutual exclusion
-
-Key concepts:
-- Semaphores
-- Process synchronization
-- Critical section problem
-- Producer-consumer problem
-
-## Experiment 6: CPU Scheduling Algorithms
-
-1. First Come First Serve (FCFS)
-   - `fcfswithat.c`: FCFS with arrival time
-   - `fcfswithout at.c`: FCFS without arrival time
-
-2. Shortest Job First (SJF)
-   - `sjfs.c`: Basic SJF implementation
-   - `sjfwithat.c`: SJF with arrival time
-   - `sjf with pr wihout at.c`: SJF with priority without arrival time
-
-3. Priority Scheduling
-   - `prioritysjfat.c`: Priority scheduling with SJF
-   - `priwithpre.c`: Priority scheduling with preemption
-
-Key concepts:
-- CPU scheduling algorithms
-- Process scheduling
-- Arrival time handling
-- Priority-based scheduling
-- Preemptive vs non-preemptive scheduling
-
-## Experiment 7: Deadlock Avoidance
-
-### Banker's Algorithm (`bankersalgorithm.c`)
-- Implements the banker's algorithm for deadlock avoidance
-- Handles multiple resources and processes
-- Determines safe sequence of process execution
-
-Key concepts:
-- Deadlock avoidance
-- Resource allocation
-- Safe state verification
-
-## Experiment 8: Memory Management
-
-### Memory Allocation Strategies
-1. `firstfit.c`: First Fit memory allocation
-2. `bestfit.c`: Best Fit memory allocation
-3. `bestme.c`: Enhanced Best Fit implementation
-
-Key concepts:
-- Memory allocation algorithms
-- Memory fragmentation
-- Memory block management
-
-## Experiment 9: Page Replacement Algorithms
-
-1. `fifo.c`: First In First Out page replacement
-2. `lrume.c`: Least Recently Used page replacement
-
-Key concepts:
-- Page replacement policies
-- Memory management
-- Cache management
-- Page faults handling
-
-## Experiment 10: Disk Scheduling
-
-1. `fcfs.c`: First Come First Serve disk scheduling
-2. `scan.c`: SCAN disk scheduling algorithm
-3. `cscan.c`: Circular SCAN (C-SCAN) algorithm
-
-Key concepts:
-- Disk scheduling algorithms
-- Seek time optimization
-- Head movement strategies
+Each experiment folder is self-contained. See the corresponding `_explanation.md` and `scheduling_comparison.md` for context.
