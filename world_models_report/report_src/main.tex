@@ -372,7 +372,7 @@ Comparing these systems along the axes of representation (explicit physics model
 
 \paragraph{} Embodied Artificial Intelligence (AI) concerns intelligent agents---most prominently robots---that must perceive their surroundings, reason about the physical world, and execute actions to accomplish goals. Unlike disembodied AI systems that operate purely on digital data, embodied agents are embedded in dynamic, partially observable, and physically constrained environments. A robot that manipulates a cabinet, a quadruped that climbs over an obstacle, and a domestic robot that searches for a bed in an unfamiliar house all face the same fundamental difficulty: a single observation rarely reveals everything the agent needs to know, and every action has physical consequences that unfold over time. Purely reactive policies, which map current perception directly to actions, often struggle in such settings because they cannot anticipate the outcome of an action before committing to it.
 
-\paragraph{} Humans and animals solve this problem with remarkable elegance. Cognitive science suggests that biological agents build a \textbf{mental model} of the world---an internal representation that captures how the environment behaves and how it will respond to actions. Using motor imagery and mental simulation, humans can ``imagine'' the consequences of a movement before executing it, and they actively interact with objects to gather the information required to refine this model, a process known as \textbf{interactive perception}. Translating this natural ability to machines has given rise to the concept of the \textbf{world model}: a computational representation of environment dynamics that allows an agent to predict future states, simulate candidate actions internally, and plan behavior with foresight rather than reacting blindly.
+\paragraph{} Humans and animals solve this problem with remarkable elegance. Cognitive science suggests that biological agents build a \textbf{mental model} of the world---an internal representation that captures how the environment behaves and how it will respond to actions. Using motor imagery and mental simulation, humans can ``imagine'' the consequences of a movement before executing it, and they actively interact with objects to gather the information required to refine this model, a process known as \textbf{interactive perception}. Translating this natural ability to machines has given rise to the concept of the \textbf{world model} \cite{ha2018}: a computational representation of environment dynamics that allows an agent to predict future states, simulate candidate actions internally, and plan behavior with foresight rather than reacting blindly.
 
 \paragraph{} World models have a long history in optimal control and Model-Based Reinforcement Learning (MBRL), where a learned transition model of the environment is used to improve sample efficiency and enable planning. Modern instantiations span a wide spectrum. At one end are \textbf{explicit physics-based world models}, in which the environment is reconstructed as an interactable digital twin inside a physics simulator; these models embed strong physical priors and generalize naturally to unseen actions. At the other end are \textbf{learned latent world models}, such as the Recurrent State-Space Model (RSSM) popularized by the Dreamer family, which compress high-dimensional sensory streams into compact latent states that support future prediction. Between these extremes lie structured scene-level representations, such as dynamic 3D Gaussian fields that attach motion attributes to explicit geometry, and, most recently, \textbf{foundation-model-driven world models}, in which Large Language Models (LLMs) and Vision-Language Models (VLMs) serve as commonsense predictors of how a scene is likely to unfold.
 
@@ -394,9 +394,9 @@ Comparing these systems along the axes of representation (explicit physics model
 
 \section{Evolution of World Models}
 
-\paragraph{} The idea that an agent should learn and exploit a model of its environment predates deep learning by decades. Sutton's \textbf{Dyna} architecture (1991) integrated learning, planning, and reacting by using a learned model to generate simulated experience that supplements real interaction. Model Predictive Control, developed in the process-control industry, formalized the practice of repeatedly optimizing a finite-horizon plan through a dynamics model and executing only its first action. These classical approaches, however, relied on low-dimensional, hand-specified state spaces.
+\paragraph{} The idea that an agent should learn and exploit a model of its environment predates deep learning by decades. Sutton's \textbf{Dyna} architecture \cite{sutton1991} (1991) integrated learning, planning, and reacting by using a learned model to generate simulated experience that supplements real interaction. Model Predictive Control, developed in the process-control industry, formalized the practice of repeatedly optimizing a finite-horizon plan through a dynamics model and executing only its first action. These classical approaches, however, relied on low-dimensional, hand-specified state spaces.
 
-\paragraph{} The modern resurgence of world models began when deep networks made it possible to learn dynamics directly from pixels. Ha and Schmidhuber's \textbf{World Models} (2018) combined a variational autoencoder, a recurrent mixture-density network, and a compact controller, showing that an agent could learn to act inside its own ``dream''. PETS and MBPO demonstrated that probabilistic ensembles of learned dynamics could match model-free performance with an order of magnitude fewer samples. \textbf{PlaNet} introduced the Recurrent State-Space Model (RSSM), which separates deterministic and stochastic latent components, and the \textbf{Dreamer} series learned behaviors entirely by imagination in this latent space, eventually mastering diverse domains with a single configuration. \textbf{DayDreamer} then showed that such models could train real robots, including a quadruped that learned to walk in about an hour, directly in the physical world.
+\paragraph{} The modern resurgence of world models began when deep networks made it possible to learn dynamics directly from pixels. Ha and Schmidhuber's \textbf{World Models} (2018) combined a variational autoencoder, a recurrent mixture-density network, and a compact controller, showing that an agent could learn to act inside its own ``dream''. PETS and MBPO demonstrated that probabilistic ensembles of learned dynamics could match model-free performance with an order of magnitude fewer samples. \textbf{PlaNet} \cite{hafner2019planet} introduced the Recurrent State-Space Model (RSSM), which separates deterministic and stochastic latent components, and the \textbf{Dreamer} series \cite{hafner2023dreamerv3} learned behaviors entirely by imagination in this latent space, eventually mastering diverse domains with a single configuration. \textbf{DayDreamer} then showed that such models could train real robots, including a quadruped that learned to walk in about an hour, directly in the physical world.
 
 \paragraph{} In parallel, the robotics community developed \textbf{explicit} world models in the form of digital twins: reconstructions of objects or scenes that can be loaded into physics engines. Ditto built digital twins of single-joint articulated objects from two point-cloud frames, and Sim2Real$^2$, the predecessor of the base paper, used such a twin as a physics-based ``mental model'' for precise manipulation. The arrival of Neural Radiance Fields and 3D Gaussian Splatting provided photorealistic, differentiable scene representations that could be extended in time, leading to Gaussian world models such as ManiGaussian and GAF \cite{p2}. Most recently, large video-prediction models and foundation models have been proposed as general-purpose world simulators, and LLMs/VLMs have been used as abstract world models for web agents and embodied navigation \cite{p4}. Table~\ref{tab:evolution} summarizes this progression.
 
@@ -483,7 +483,7 @@ Comparing these systems along the axes of representation (explicit physics model
 
 \paragraph{} Partial observability is the central difficulty of embodied AI. A forward-facing camera on a quadruped cannot see the terrain directly beneath its feet; a single RGB-D view of a cabinet cannot reveal whether its door rotates about a hinge or slides on a rail; and a navigation agent cannot see into the next room. Because the optimal action depends on quantities that are not directly observed, the agent must maintain some internal summary of its history---a \emph{belief state} $b_t = p(s_t \mid o_{\le t}, a_{<t})$. Computing exact beliefs is intractable for high-dimensional sensory inputs, which is precisely why learned or constructed world models are needed: they provide a tractable approximation of the belief together with the ability to predict how it will evolve under candidate actions.
 
-\paragraph{} Policies for continuous control are frequently optimized with \textbf{Proximal Policy Optimization} (PPO), an actor--critic algorithm that constrains each policy update to a trust region through a clipped surrogate objective:
+\paragraph{} Policies for continuous control are frequently optimized with \textbf{Proximal Policy Optimization} (PPO) \cite{ppo}, an actor--critic algorithm that constrains each policy update to a trust region through a clipped surrogate objective:
 \begin{equation}
 L^{\mathrm{CLIP}}(\theta)=\mathbb{E}_t\Big[\min\big(\rho_t(\theta)\hat{A}_t,\;\operatorname{clip}(\rho_t(\theta),1-\epsilon,1+\epsilon)\hat{A}_t\big)\Big],\qquad \rho_t(\theta)=\frac{\pi_\theta(a_t\mid o_t)}{\pi_{\theta_{\mathrm{old}}}(a_t\mid o_t)},
 \label{eq:ppo}
@@ -612,7 +612,7 @@ where $f$ is the world model. When the model is a physics simulator with complex
 \mu \leftarrow \frac{1}{E}\sum_{e\in\mathcal{E}} A^{(e)},\qquad \sigma^{2}\leftarrow\frac{1}{E}\sum_{e\in\mathcal{E}}\big(A^{(e)}-\mu\big)^{2}.
 \label{eq:cem}
 \end{equation}
-MPPI instead updates the mean with an exponentially weighted average of \emph{all} samples, $\mu \leftarrow \sum_n w_n A^{(n)}$ with $w_n \propto \exp\!\big(R^{(n)}/\lambda\big)$, where $\lambda$ is a temperature. The \textbf{improved CEM} (iCEM) used by DexSim2Real$^2$ adds several refinements that reduce the number of samples needed for real-time planning: temporally correlated (coloured-noise) sampling that produces smoother action sequences, keeping a fraction of elites between iterations and between time steps, shifting the previous solution to initialize the next step, and executing the best sampled action rather than the mean. Algorithm~\ref{alg:cem} summarizes sampling-based MPC.
+MPPI instead updates the mean with an exponentially weighted average of \emph{all} samples, $\mu \leftarrow \sum_n w_n A^{(n)}$ with $w_n \propto \exp\!\big(R^{(n)}/\lambda\big)$, where $\lambda$ is a temperature. The \textbf{improved CEM} (iCEM) \cite{icem} used by DexSim2Real$^2$ adds several refinements that reduce the number of samples needed for real-time planning: temporally correlated (coloured-noise) sampling that produces smoother action sequences, keeping a fraction of elites between iterations and between time steps, shifting the previous solution to initialize the next step, and executing the best sampled action rather than the mean. Algorithm~\ref{alg:cem} summarizes sampling-based MPC.
 
 \begin{algorithm}[htbp]
 \caption{Sampling-based MPC with the (improved) Cross-Entropy Method}\label{alg:cem}
@@ -642,7 +642,7 @@ where $e_i$ are the eigenvectors with the largest eigenvalues and $\alpha_i$ are
 
 \section{Explicit Scene Representations: 3D Gaussian Splatting}
 
-\paragraph{} \textbf{3D Gaussian Splatting} (3DGS) represents a scene as a set of anisotropic 3D Gaussians, each with a centre $\mu\in\mathbb{R}^3$, a covariance $\Sigma$, an opacity $\sigma$, and a colour $c$ (often represented with spherical harmonics). The density of a Gaussian at point $x$ is
+\paragraph{} \textbf{3D Gaussian Splatting} (3DGS) \cite{kerbl2023} represents a scene as a set of anisotropic 3D Gaussians, each with a centre $\mu\in\mathbb{R}^3$, a covariance $\Sigma$, an opacity $\sigma$, and a colour $c$ (often represented with spherical harmonics). The density of a Gaussian at point $x$ is
 \begin{equation}
 G(x)=\exp\!\Big(-\tfrac{1}{2}(x-\mu)^{\top}\Sigma^{-1}(x-\mu)\Big),\qquad \Sigma = R\,S\,S^{\top}R^{\top},
 \label{eq:gauss}
@@ -1878,7 +1878,7 @@ Future research is expected to converge these paradigms: enriching explicit and 
 % ================= REFERENCES =================
 \begingroup
 \setstretch{1.15}
-\begin{thebibliography}{9}
+\begin{thebibliography}{99}
 \addcontentsline{toc}{chapter}{References}
 
 \bibitem{p1}
@@ -1892,6 +1892,27 @@ H. Lai, J. Cao, J. Xu, H. Wu, Y. Lin, T. Kong, Y. Yu, and W. Zhang, ``World Mode
 
 \bibitem{p4}
 D. Nie, X. Guo, Y. Duan, R. Zhang, and L. Chen, ``WMNav: Integrating Vision-Language Models into World Models for Object Goal Navigation,'' in \textit{Proc. IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}, 2025, pp. 2392--2399.
+
+\bibitem{ha2018}
+D. Ha and J. Schmidhuber, ``World models,'' \textit{arXiv preprint arXiv:1803.10122}, 2018.
+
+\bibitem{sutton1991}
+R. S. Sutton, ``Dyna, an integrated architecture for learning, planning, and reacting,'' \textit{ACM SIGART Bulletin}, vol. 2, no. 4, pp. 160--163, 1991.
+
+\bibitem{hafner2019planet}
+D. Hafner, T. Lillicrap, I. Fischer, R. Villegas, D. Ha, H. Lee, and J. Davidson, ``Learning latent dynamics for planning from pixels,'' in \textit{Proc. International Conference on Machine Learning (ICML)}, 2019, pp. 2555--2565.
+
+\bibitem{hafner2023dreamerv3}
+D. Hafner, J. Pasukonis, J. Ba, and T. Lillicrap, ``Mastering diverse domains through world models,'' \textit{arXiv preprint arXiv:2301.04104}, 2023.
+
+\bibitem{ppo}
+J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov, ``Proximal policy optimization algorithms,'' \textit{arXiv preprint arXiv:1707.06347}, 2017.
+
+\bibitem{icem}
+C. Pinneri, S. Sawant, S. Blaes, J. Achterhold, J. Stueckler, M. Rolinek, and G. Martius, ``Sample-efficient cross-entropy method for real-time planning,'' in \textit{Proc. Conference on Robot Learning (CoRL)}, PMLR vol. 155, 2021, pp. 1049--1065.
+
+\bibitem{kerbl2023}
+B. Kerbl, G. Kopanas, T. Leimk\"uhler, and G. Drettakis, ``3D Gaussian splatting for real-time radiance field rendering,'' \textit{ACM Transactions on Graphics}, vol. 42, no. 4, 2023.
 
 \end{thebibliography}
 \endgroup
