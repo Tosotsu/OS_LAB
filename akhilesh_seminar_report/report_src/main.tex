@@ -488,13 +488,13 @@ and an \textbf{entropy} bonus $\beta\nabla_{\theta}H(\pi(s_t;\theta))$ keeps the
   env/.style={draw, rounded corners=4pt, fill=boxgreen, minimum width=4.6cm, minimum height=4.2cm, font=\small, align=center},
   lab/.style={font=\scriptsize, text=inkgray}]
 \node[env] (E) at (0,0) {\textbf{Shared environment}\\[4pt]channels, queues,\\ servers, mobility,\\ interference};
-\node[agent] (A1) at (-6.0,1.7) {Agent 1\\[-2pt]\scriptsize policy $\pi_1(a\mid o_1)$};
-\node[agent] (A2) at (-6.0,0.0) {Agent 2\\[-2pt]\scriptsize policy $\pi_2(a\mid o_2)$};
-\node[agent] (AN) at (-6.0,-1.7) {Agent $N$\\[-2pt]\scriptsize policy $\pi_N(a\mid o_N)$};
-\node[font=\small] at (-6.0,-0.85) {$\vdots$};
+\node[agent] (A1) at (-6.9,1.7) {Agent 1\\[-2pt]\scriptsize policy $\pi_1(a\mid o_1)$};
+\node[agent] (A2) at (-6.9,0.0) {Agent 2\\[-2pt]\scriptsize policy $\pi_2(a\mid o_2)$};
+\node[agent] (AN) at (-6.9,-1.7) {Agent $N$\\[-2pt]\scriptsize policy $\pi_N(a\mid o_N)$};
+\node[font=\small] at (-6.9,-0.85) {$\vdots$};
 \foreach \a/\y in {A1/1.7,A2/0.0,AN/-1.7} {
-  \draw[->, seriesB] ([yshift=3pt]\a.east) -- node[lab, above, pos=0.45]{action $a_i$} ([yshift=3pt]E.west |- 0,\y);
-  \draw[<-, seriesA] ([yshift=-4pt]\a.east) -- node[lab, below, pos=0.45]{obs. $o_i$, reward $r_i$} ([yshift=-4pt]E.west |- 0,\y);
+  \draw[->, seriesB] ([yshift=3pt]\a.east) -- node[lab, above, pos=0.5]{action $a_i$} ([yshift=3pt]E.west |- 0,\y);
+  \draw[<-, seriesA] ([yshift=-4pt]\a.east) -- node[lab, below, pos=0.5]{obs. $o_i$, reward $r_i$} ([yshift=-4pt]E.west |- 0,\y);
 }
 \node[draw, dashed, rounded corners=4pt, fit=(A1)(AN), inner sep=6pt, label={[font=\scriptsize, text=inkgray]above:joint action $\mathbf{a}=(a_1,\dots,a_N)$}] {};
 \node[lab, text width=3.6cm, align=center, anchor=west] at (2.6,0) {Next state depends on the joint action; each agent sees only its own observation};
@@ -551,7 +551,7 @@ The standard algorithm, \textbf{Federated Averaging} (FedAvg) \cite{mcmahan2017}
 \node[agent] (L1) at (-4.4,0.5) {\textbf{Agent 1}\\ local DRL model $w_1$};
 \node[agent] (L2) at (0,0.5) {\textbf{Agent 2}\\ local DRL model $w_2$};
 \node[agent] (L3) at (4.4,0.5) {\textbf{Agent $N$}\\ local DRL model $w_N$};
-\node[envb] (E) at (0,-1.45) {\textbf{Shared environment} --- local observations, actions, rewards (raw data stay local)};
+\node[envb] (E) at (0,-1.45) {\textbf{Shared environment}: local observations, actions, and rewards\\ (raw data never leave the agents)};
 \foreach \l in {L1,L2,L3} {
   \draw[->, seriesA] ([xshift=-5pt]\l.north) -- ([xshift=-5pt]\l.north |- G.south);
   \draw[<-, seriesC] ([xshift=5pt]\l.north) -- ([xshift=5pt]\l.north |- G.south);
@@ -583,9 +583,9 @@ Every mask appears once with each sign, so $\sum_iM_i=0$ and the average of mask
 \node[ag] (a3) at (4.6,0) {Agent 3 sends\\ $w_3-m_{13}-m_{23}$};
 \node[srv] (s) at (0,-2.3) {Server sums masked updates:\\ $\sum_i\tilde{w}_i=w_1+w_2+w_3$ (masks cancel)};
 \foreach \a in {a1,a2,a3} \draw[->, seriesA] (\a.south) -- (s.north);
-\draw[<->, seriesB, dashed] (a1.north) to[bend left=22] node[lab, above]{ECDH key $\rightarrow m_{12}$} (a2.north);
-\draw[<->, seriesB, dashed] (a2.north) to[bend left=22] node[lab, above]{ECDH key $\rightarrow m_{23}$} (a3.north);
-\draw[<->, seriesB, dashed] (a1.north) to[bend left=30] node[lab, above]{ECDH key $\rightarrow m_{13}$} (a3.north);
+\draw[<->, seriesB, dashed] (a1.north) to[bend left=22] node[lab, below=1pt]{ECDH key $\rightarrow m_{12}$} (a2.north);
+\draw[<->, seriesB, dashed] (a2.north) to[bend left=22] node[lab, below=1pt]{ECDH key $\rightarrow m_{23}$} (a3.north);
+\draw[<->, seriesB, dashed] (a1.north) to[out=75,in=105] node[lab, above]{ECDH key $\rightarrow m_{13}$} (a3.north);
 \end{tikzpicture}
 \caption{Secure aggregation with pairwise masks: each individual upload is hidden, but the masks cancel in the sum}
 \label{fig:secagg}
@@ -649,7 +649,7 @@ Training time to target accuracy & Wall-clock time until the global model reache
 \begin{tikzpicture}[>=Stealth, thick,
   root/.style={draw, rounded corners=4pt, fill=boxgray, text width=4.6cm, minimum height=0.9cm, font=\small\bfseries, align=center},
   cat/.style={draw, rounded corners=4pt, text width=3.3cm, minimum height=0.85cm, font=\small\bfseries, align=center},
-  leaf/.style={font=\scriptsize, align=left, text width=3.4cm, anchor=north}]
+  leaf/.style={font=\scriptsize, align=left, text width=3.65cm, anchor=north}]
 \node[root] (R) at (0,0) {Federated Multi-Agent Learning};
 \node[cat, fill=boxblue]   (c1) at (-5.7,-1.7) {Formulation};
 \node[cat, fill=boxgreen]  (c2) at (-1.9,-1.7) {Training topology};
@@ -1205,15 +1205,16 @@ Evaluation & SUMO, $\lambda=60$--$200$ & 6G simulator, 800 episodes & Qualitativ
 \begin{tikzpicture}[>=Stealth, thick,
   pt/.style={circle, fill=#1, minimum size=9pt, inner sep=0pt},
   lab/.style={font=\small, align=left, anchor=west}]
-\draw[->, inkgray] (0,0) -- (11.2,0) node[below left, font=\small, text=black]{Decentralisation of training};
+\draw[->, inkgray] (0,0) -- (11.2,0);
+\node[font=\small] at (5.6,-0.8) {Decentralisation of training};
 \draw[->, inkgray] (0,0) -- (0,5.6) node[above, font=\small, text=black]{Protection of individual updates};
 \foreach \x/\t in {1.2/Central server,4.6/Server or fog tier,8.8/Peer-to-peer} \node[font=\scriptsize, text=inkgray] at (\x,-0.35) {\t};
 \foreach \y/\t in {0.8/None,2.6/Data local,4.4/Cryptographic} \node[font=\scriptsize, text=inkgray, rotate=90] at (-0.35,\y) {\t};
-\fill[boxgreen, opacity=0.6] (7.6,3.7) rectangle (11.0,5.4);
-\node[font=\scriptsize, align=center, text=inkgray] at (9.3,4.95) {target region:\\ decentralised, private,\\ and robust};
+\fill[boxgreen, opacity=0.6] (8.0,3.9) rectangle (11.0,5.5);
+\node[font=\scriptsize, align=center, text=inkgray] at (9.5,4.7) {target region:\\ decentralised, private,\\ and robust};
 \node[pt=inkgray] at (1.2,0.8) {}; \node[lab] at (1.45,0.8) {Centralised RL (baseline in [2])};
 \node[pt=seriesA] at (4.2,2.4) {}; \node[lab] at (4.45,2.4) {Two-tier federated A3C [1]};
-\node[pt=seriesB] at (4.8,4.4) {}; \node[lab] at (5.05,4.4) {FERMI-6G, secure aggregation [2]};
+\node[pt=seriesB] at (4.2,4.4) {}; \node[lab] at (4.45,4.4) {FERMI-6G [2]};
 \node[pt=seriesC] at (8.6,2.9) {}; \node[lab] at (8.85,2.9) {ComDML [4]};
 \draw[->, dashed, seriesC] (8.6,3.1) -- (8.6,3.6) node[right, font=\scriptsize, text=inkgray, pos=0.6]{+ DP};
 \end{tikzpicture}
