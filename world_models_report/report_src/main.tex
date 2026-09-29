@@ -372,9 +372,9 @@ Comparing these systems along the axes of representation (explicit physics model
 
 \paragraph{} Embodied Artificial Intelligence (AI) concerns intelligent agents---most prominently robots---that must perceive their surroundings, reason about the physical world, and execute actions to accomplish goals. Unlike disembodied AI systems that operate purely on digital data, embodied agents are embedded in dynamic, partially observable, and physically constrained environments. A robot that manipulates a cabinet, a quadruped that climbs over an obstacle, and a domestic robot that searches for a bed in an unfamiliar house all face the same fundamental difficulty: a single observation rarely reveals everything the agent needs to know, and every action has physical consequences that unfold over time. Purely reactive policies, which map current perception directly to actions, often struggle in such settings because they cannot anticipate the outcome of an action before committing to it.
 
-\paragraph{} Humans and animals solve this problem with remarkable elegance. Cognitive science suggests that biological agents build a \textbf{mental model} of the world---an internal representation that captures how the environment behaves and how it will respond to actions. Using motor imagery and mental simulation, humans can ``imagine'' the consequences of a movement before executing it \cite{johnson2000}, and they actively interact with objects to gather the information required to refine this model, a process known as \textbf{interactive perception}. Translating this natural ability to machines has given rise to the concept of the \textbf{world model} \cite{ha2018}: a computational representation of environment dynamics that allows an agent to predict future states, simulate candidate actions internally, and plan behavior with foresight rather than reacting blindly.
+\paragraph{} Humans and animals solve this problem with remarkable elegance. Cognitive science suggests that biological agents build a \textbf{mental model} of the world---an internal representation that captures how the environment behaves and how it will respond to actions. Using motor imagery and mental simulation, humans can ``imagine'' the consequences of a movement before executing it, and they actively interact with objects to gather the information required to refine this model, a process known as \textbf{interactive perception}. Translating this natural ability to machines has given rise to the concept of the \textbf{world model}: a computational representation of environment dynamics that allows an agent to predict future states, simulate candidate actions internally, and plan behavior with foresight rather than reacting blindly.
 
-\paragraph{} World models have a long history in optimal control and Model-Based Reinforcement Learning (MBRL) \cite{sutton1991,moerland2023}, where a learned transition model of the environment is used to improve sample efficiency and enable planning. Modern instantiations span a wide spectrum. At one end are \textbf{explicit physics-based world models}, in which the environment is reconstructed as an interactable digital twin inside a physics simulator; these models embed strong physical priors and generalize naturally to unseen actions. At the other end are \textbf{learned latent world models}, such as the Recurrent State-Space Model (RSSM) popularized by the Dreamer family \cite{hafner2019planet,hafner2023dreamerv3}, which compress high-dimensional sensory streams into compact latent states that support future prediction. Between these extremes lie structured scene-level representations, such as dynamic 3D Gaussian fields that attach motion attributes to explicit geometry, and, most recently, \textbf{foundation-model-driven world models}, in which Large Language Models (LLMs) and Vision-Language Models (VLMs) serve as commonsense predictors of how a scene is likely to unfold.
+\paragraph{} World models have a long history in optimal control and Model-Based Reinforcement Learning (MBRL), where a learned transition model of the environment is used to improve sample efficiency and enable planning. Modern instantiations span a wide spectrum. At one end are \textbf{explicit physics-based world models}, in which the environment is reconstructed as an interactable digital twin inside a physics simulator; these models embed strong physical priors and generalize naturally to unseen actions. At the other end are \textbf{learned latent world models}, such as the Recurrent State-Space Model (RSSM) popularized by the Dreamer family, which compress high-dimensional sensory streams into compact latent states that support future prediction. Between these extremes lie structured scene-level representations, such as dynamic 3D Gaussian fields that attach motion attributes to explicit geometry, and, most recently, \textbf{foundation-model-driven world models}, in which Large Language Models (LLMs) and Vision-Language Models (VLMs) serve as commonsense predictors of how a scene is likely to unfold.
 
 \paragraph{} This seminar examines how these different families of world models are applied across the three core competencies of embodied AI. In the domain of \textbf{manipulation}, the base paper DexSim2Real$^2$ \cite{p1} constructs an explicit world model of unseen articulated objects, such as drawers, cabinets, laptops, and lamps, through one-step interactive perception followed by 3D AI-Generated Content (AIGC)-based digital twin reconstruction; sampling-based Model Predictive Control (MPC) then plans precise, goal-conditioned trajectories for suction grippers, two-finger grippers, and multi-finger dexterous hands without requiring demonstrations or reinforcement learning. Complementing this, the Gaussian Action Field (GAF) \cite{p2} adopts a Vision-to-4D-to-Action (V-4D-A) paradigm: it extends 3D Gaussian Splatting (3DGS) with learnable motion attributes so that a single feed-forward network reconstructs the current scene, predicts the future scene, and extracts an initial action from the predicted Gaussian motion, which is subsequently refined by an action-vision-aligned diffusion model.
 
@@ -388,17 +388,17 @@ Comparing these systems along the axes of representation (explicit physics model
 
 \paragraph{} Approaches to embodied decision-making can be broadly categorized into \textbf{model-free}, \textbf{model-based}, and \textbf{hybrid} paradigms. Model-free methods, including most Reinforcement Learning (RL) and Imitation Learning (IL) policies, learn a direct mapping from observations to actions; they are simple to deploy but data-hungry and brittle when the state distribution is complex, as with articulated objects. Model-based methods first acquire a model of the environment---explicit or learned---and then use it for planning or policy optimization, gaining sample efficiency and foresight at the cost of model construction. Hybrid systems combine both: a generalizable model-construction module paired with task-specific planning (as in DexSim2Real$^2$), or a learned world model whose latent state feeds a model-free policy (as in WMP). Architecturally, world models exploit components such as Convolutional Neural Networks (CNNs) for visual encoding, Gated Recurrent Units (GRUs) for temporal dynamics, Vision Transformers (ViTs) for geometry-aware feature extraction, and foundation VLMs for semantic prediction, allowing embodied agents to perceive, remember, and predict in real time.
 
-\paragraph{} A second axis along which embodied systems differ is the \textbf{source of their training signal}. Early robot learning relied on hand-engineered controllers and carefully tuned state machines. The deep learning era replaced these with policies trained either from human demonstrations (imitation) or from trial-and-error interaction with a reward signal (reinforcement). Both strategies require large quantities of data: dexterous in-hand manipulation and agile locomotion policies are typically trained on billions of simulated interaction steps, while imitation-based manipulation systems need hundreds of demonstrations per task. Physics simulators such as SAPIEN \cite{sapien} and Isaac Gym \cite{isaacgym} alleviate this burden by providing massively parallel, safe, and inexpensive experience, but they introduce the \textbf{sim-to-real gap}: discrepancies in dynamics, sensing, and appearance between the simulated and the physical world. World models sit at the heart of this landscape because they can be learned from simulation, from real data, or from internet-scale pre-training, and because they allow the agent to reuse a single predictive model for many downstream tasks.
+\paragraph{} A second axis along which embodied systems differ is the \textbf{source of their training signal}. Early robot learning relied on hand-engineered controllers and carefully tuned state machines. The deep learning era replaced these with policies trained either from human demonstrations (imitation) or from trial-and-error interaction with a reward signal (reinforcement). Both strategies require large quantities of data: dexterous in-hand manipulation and agile locomotion policies are typically trained on billions of simulated interaction steps, while imitation-based manipulation systems need hundreds of demonstrations per task. Physics simulators such as SAPIEN and Isaac Gym alleviate this burden by providing massively parallel, safe, and inexpensive experience, but they introduce the \textbf{sim-to-real gap}: discrepancies in dynamics, sensing, and appearance between the simulated and the physical world. World models sit at the heart of this landscape because they can be learned from simulation, from real data, or from internet-scale pre-training, and because they allow the agent to reuse a single predictive model for many downstream tasks.
 
 \paragraph{} A third axis is the \textbf{modality of perception}. Manipulation systems typically rely on RGB or RGB-D cameras observing a tabletop; legged robots combine proprioception (joint angles, velocities, body orientation) with egocentric depth images; navigation agents use panoramic RGB-D views and pose estimates. Each modality imposes its own requirements on the world model. Manipulation needs fine geometric accuracy at the contact level, locomotion needs fast and robust estimates of terrain geometry under motion blur and latency, and navigation needs semantic understanding of room layouts and object--room relationships.
 
 \section{Evolution of World Models}
 
-\paragraph{} The idea that an agent should learn and exploit a model of its environment predates deep learning by decades. Sutton's \textbf{Dyna} architecture \cite{sutton1991} (1991) integrated learning, planning, and reacting by using a learned model to generate simulated experience that supplements real interaction. Model Predictive Control, developed in the process-control industry, formalized the practice of repeatedly optimizing a finite-horizon plan through a dynamics model and executing only its first action. These classical approaches, however, relied on low-dimensional, hand-specified state spaces.
+\paragraph{} The idea that an agent should learn and exploit a model of its environment predates deep learning by decades. Sutton's \textbf{Dyna} architecture (1991) integrated learning, planning, and reacting by using a learned model to generate simulated experience that supplements real interaction. Model Predictive Control, developed in the process-control industry, formalized the practice of repeatedly optimizing a finite-horizon plan through a dynamics model and executing only its first action. These classical approaches, however, relied on low-dimensional, hand-specified state spaces.
 
-\paragraph{} The modern resurgence of world models began when deep networks made it possible to learn dynamics directly from pixels. Ha and Schmidhuber's \textbf{World Models} \cite{ha2018} (2018) combined a variational autoencoder, a recurrent mixture-density network, and a compact controller, showing that an agent could learn to act inside its own ``dream''. PETS \cite{chua2018} and MBPO \cite{janner2019} demonstrated that probabilistic ensembles of learned dynamics could match model-free performance with an order of magnitude fewer samples. \textbf{PlaNet} \cite{hafner2019planet} introduced the Recurrent State-Space Model (RSSM), which separates deterministic and stochastic latent components, and the \textbf{Dreamer} series \cite{hafner2019dreamer,hafner2020dreamerv2,hafner2023dreamerv3} learned behaviors entirely by imagination in this latent space, eventually mastering diverse domains with a single configuration. \textbf{DayDreamer} \cite{daydreamer} then showed that such models could train real robots, including a quadruped that learned to walk in about an hour, directly in the physical world.
+\paragraph{} The modern resurgence of world models began when deep networks made it possible to learn dynamics directly from pixels. Ha and Schmidhuber's \textbf{World Models} (2018) combined a variational autoencoder, a recurrent mixture-density network, and a compact controller, showing that an agent could learn to act inside its own ``dream''. PETS and MBPO demonstrated that probabilistic ensembles of learned dynamics could match model-free performance with an order of magnitude fewer samples. \textbf{PlaNet} introduced the Recurrent State-Space Model (RSSM), which separates deterministic and stochastic latent components, and the \textbf{Dreamer} series learned behaviors entirely by imagination in this latent space, eventually mastering diverse domains with a single configuration. \textbf{DayDreamer} then showed that such models could train real robots, including a quadruped that learned to walk in about an hour, directly in the physical world.
 
-\paragraph{} In parallel, the robotics community developed \textbf{explicit} world models in the form of digital twins: reconstructions of objects or scenes that can be loaded into physics engines. Ditto \cite{ditto} built digital twins of single-joint articulated objects from two point-cloud frames, and Sim2Real$^2$ \cite{sim2real2}, the predecessor of the base paper, used such a twin as a physics-based ``mental model'' for precise manipulation. The arrival of Neural Radiance Fields \cite{nerf} and 3D Gaussian Splatting \cite{kerbl2023} provided photorealistic, differentiable scene representations that could be extended in time, leading to Gaussian world models such as ManiGaussian \cite{manigaussian} and GAF \cite{p2}. Most recently, large video-prediction models \cite{unisim} and foundation models have been proposed as general-purpose world simulators, and LLMs/VLMs have been used as abstract world models for web agents and embodied navigation \cite{p4}. Table~\ref{tab:evolution} summarizes this progression.
+\paragraph{} In parallel, the robotics community developed \textbf{explicit} world models in the form of digital twins: reconstructions of objects or scenes that can be loaded into physics engines. Ditto built digital twins of single-joint articulated objects from two point-cloud frames, and Sim2Real$^2$, the predecessor of the base paper, used such a twin as a physics-based ``mental model'' for precise manipulation. The arrival of Neural Radiance Fields and 3D Gaussian Splatting provided photorealistic, differentiable scene representations that could be extended in time, leading to Gaussian world models such as ManiGaussian and GAF \cite{p2}. Most recently, large video-prediction models and foundation models have been proposed as general-purpose world simulators, and LLMs/VLMs have been used as abstract world models for web agents and embodied navigation \cite{p4}. Table~\ref{tab:evolution} summarizes this progression.
 
 {\renewcommand{\arraystretch}{1.2}
 \begin{table}[htbp]
@@ -408,15 +408,15 @@ Comparing these systems along the axes of representation (explicit physics model
 \begin{tabularx}{\textwidth}{|p{1.2cm}|p{3.6cm}|X|}
 \hline
 \textbf{Year} & \textbf{Work} & \textbf{Key contribution} \\ \hline
-1991 & Dyna \cite{sutton1991} & Learned model generates simulated experience for planning and learning. \\ \hline
-2018 & World Models \cite{ha2018} & VAE + recurrent dynamics; policies trained inside a learned ``dream''. \\ \hline
-2018--19 & PETS / MBPO \cite{chua2018,janner2019} & Probabilistic dynamics ensembles; sample-efficient continuous control. \\ \hline
-2019 & PlaNet \cite{hafner2019planet} & Recurrent State-Space Model; latent planning from pixels. \\ \hline
-2019--23 & Dreamer V1--V3 \cite{hafner2019dreamer,hafner2020dreamerv2,hafner2023dreamerv3} & Behaviour learning by latent imagination across diverse domains. \\ \hline
-2022 & Ditto \cite{ditto} & Digital twins of articulated objects from interaction. \\ \hline
-2023 & DayDreamer \cite{daydreamer} & World models trained directly on physical robots. \\ \hline
-2023 & TD-MPC2 \cite{tdmpc2} & Scalable latent world models combined with MPC. \\ \hline
-2023 & 3D Gaussian Splatting \cite{kerbl2023} & Real-time, differentiable explicit scene representation. \\ \hline
+1991 & Dyna & Learned model generates simulated experience for planning and learning. \\ \hline
+2018 & World Models & VAE + recurrent dynamics; policies trained inside a learned ``dream''. \\ \hline
+2018--19 & PETS / MBPO & Probabilistic dynamics ensembles; sample-efficient continuous control. \\ \hline
+2019 & PlaNet & Recurrent State-Space Model; latent planning from pixels. \\ \hline
+2019--23 & Dreamer V1--V3 & Behaviour learning by latent imagination across diverse domains. \\ \hline
+2022 & Ditto & Digital twins of articulated objects from interaction. \\ \hline
+2023 & DayDreamer & World models trained directly on physical robots. \\ \hline
+2023 & TD-MPC2 & Scalable latent world models combined with MPC. \\ \hline
+2023 & 3D Gaussian Splatting & Real-time, differentiable explicit scene representation. \\ \hline
 2024 & WMP \cite{p3} & RSSM world model as perception for visual legged locomotion. \\ \hline
 2025 & DexSim2Real$^2$ \cite{p1} & 3D AIGC digital twins + MPC for dexterous articulated manipulation. \\ \hline
 2025 & WMNav \cite{p4} & VLMs as world models for zero-shot object navigation. \\ \hline
@@ -483,7 +483,7 @@ Comparing these systems along the axes of representation (explicit physics model
 
 \paragraph{} Partial observability is the central difficulty of embodied AI. A forward-facing camera on a quadruped cannot see the terrain directly beneath its feet; a single RGB-D view of a cabinet cannot reveal whether its door rotates about a hinge or slides on a rail; and a navigation agent cannot see into the next room. Because the optimal action depends on quantities that are not directly observed, the agent must maintain some internal summary of its history---a \emph{belief state} $b_t = p(s_t \mid o_{\le t}, a_{<t})$. Computing exact beliefs is intractable for high-dimensional sensory inputs, which is precisely why learned or constructed world models are needed: they provide a tractable approximation of the belief together with the ability to predict how it will evolve under candidate actions.
 
-\paragraph{} Policies for continuous control are frequently optimized with \textbf{Proximal Policy Optimization} (PPO) \cite{ppo}, an actor--critic algorithm that constrains each policy update to a trust region through a clipped surrogate objective:
+\paragraph{} Policies for continuous control are frequently optimized with \textbf{Proximal Policy Optimization} (PPO), an actor--critic algorithm that constrains each policy update to a trust region through a clipped surrogate objective:
 \begin{equation}
 L^{\mathrm{CLIP}}(\theta)=\mathbb{E}_t\Big[\min\big(\rho_t(\theta)\hat{A}_t,\;\operatorname{clip}(\rho_t(\theta),1-\epsilon,1+\epsilon)\hat{A}_t\big)\Big],\qquad \rho_t(\theta)=\frac{\pi_\theta(a_t\mid o_t)}{\pi_{\theta_{\mathrm{old}}}(a_t\mid o_t)},
 \label{eq:ppo}
@@ -514,7 +514,7 @@ Examples in this report & Student policy baseline, Diffusion Policy & DexSim2Rea
 
 \section{Formal Definition of a World Model}
 
-\paragraph{} In its most general form, a world model is a collection of learned or constructed functions that allow an agent to answer the question ``\emph{what will happen if I do this?}''. Following the Dreamer-style decomposition \cite{hafner2019dreamer}, a world model contains four components:
+\paragraph{} In its most general form, a world model is a collection of learned or constructed functions that allow an agent to answer the question ``\emph{what will happen if I do this?}''. Following the Dreamer-style decomposition, a world model contains four components:
 \begin{align}
 \text{Representation model:}\quad & z_t \sim q_\phi(z_t \mid z_{t-1}, a_{t-1}, o_t), \label{eq:wm_rep}\\
 \text{Transition model:}\quad & \hat{z}_{t+1} \sim p_\phi(\hat{z}_{t+1} \mid z_t, a_t), \label{eq:wm_trans}\\
@@ -548,14 +548,14 @@ The representation model compresses the raw observation into a state $z_t$; the 
 
 \section{Latent World Models: The Recurrent State-Space Model}
 
-\paragraph{} The Recurrent State-Space Model (RSSM), introduced in PlaNet \cite{hafner2019planet} and refined in the Dreamer series \cite{hafner2019dreamer,hafner2020dreamerv2,hafner2023dreamerv3}, is the most widely used latent world model. Its key insight is to split the latent state into a \emph{deterministic} recurrent component $h_t$, which carries information reliably over long horizons, and a \emph{stochastic} component $z_t$, which captures uncertainty and multi-modality. The model consists of
+\paragraph{} The Recurrent State-Space Model (RSSM), introduced in PlaNet and refined in the Dreamer series, is the most widely used latent world model. Its key insight is to split the latent state into a \emph{deterministic} recurrent component $h_t$, which carries information reliably over long horizons, and a \emph{stochastic} component $z_t$, which captures uncertainty and multi-modality. The model consists of
 \begin{align}
 \text{Recurrent model:}\quad & h_t = f_\phi(h_{t-1}, z_{t-1}, a_{t-1}), \\
 \text{Encoder (posterior):}\quad & z_t \sim q_\phi(z_t \mid h_t, o_t), \\
 \text{Dynamics predictor (prior):}\quad & \hat{z}_t \sim p_\phi(\hat{z}_t \mid h_t), \\
 \text{Decoder:}\quad & \hat{o}_t \sim p_\phi(\hat{o}_t \mid h_t, z_t).
 \end{align}
-The recurrent model is typically a GRU \cite{gru}. The posterior incorporates the current observation, while the prior must predict the stochastic state from history alone; at deployment, rolling the prior forward allows open-loop prediction of future observations.
+The recurrent model is typically a GRU. The posterior incorporates the current observation, while the prior must predict the stochastic state from history alone; at deployment, rolling the prior forward allows open-loop prediction of future observations.
 
 \paragraph{} The RSSM is trained by maximizing a variational evidence lower bound (ELBO), which in practice becomes the minimization of a reconstruction loss plus a Kullback--Leibler (KL) regularizer over sequences of length $L$:
 \begin{equation}
@@ -605,14 +605,14 @@ The reconstruction term forces the latent state to retain information about the 
 a^{*}_{t:t+h-1}=\arg\max_{a_{t:t+h-1}}\;\sum_{\tau=t}^{t+h-1} r(\hat{s}_\tau,a_\tau),\qquad \hat{s}_{\tau+1}=f(\hat{s}_\tau,a_\tau),\;\hat{s}_t=s_t,
 \label{eq:mpc}
 \end{equation}
-where $f$ is the world model. When the model is a physics simulator with complex contacts, as in DexSim2Real$^2$, gradients of the objective are unavailable or uninformative, so \textbf{zeroth-order} (sampling-based) optimizers are used. The best known are the Covariance Matrix Adaptation Evolution Strategy (CMA-ES), the \textbf{Cross-Entropy Method} (CEM) \cite{cem}, and Model Predictive Path Integral control (MPPI) \cite{mppi}.
+where $f$ is the world model. When the model is a physics simulator with complex contacts, as in DexSim2Real$^2$, gradients of the objective are unavailable or uninformative, so \textbf{zeroth-order} (sampling-based) optimizers are used. The best known are the Covariance Matrix Adaptation Evolution Strategy (CMA-ES), the \textbf{Cross-Entropy Method} (CEM), and Model Predictive Path Integral control (MPPI).
 
 \paragraph{} CEM maintains a Gaussian distribution $\mathcal{N}(\mu,\operatorname{diag}(\sigma^2))$ over action sequences. In each iteration it samples a population of $N$ sequences, evaluates each by rolling it out in the model, selects the $E$ highest-scoring sequences (the \emph{elite set}), and refits the distribution to the elites:
 \begin{equation}
 \mu \leftarrow \frac{1}{E}\sum_{e\in\mathcal{E}} A^{(e)},\qquad \sigma^{2}\leftarrow\frac{1}{E}\sum_{e\in\mathcal{E}}\big(A^{(e)}-\mu\big)^{2}.
 \label{eq:cem}
 \end{equation}
-MPPI instead updates the mean with an exponentially weighted average of \emph{all} samples, $\mu \leftarrow \sum_n w_n A^{(n)}$ with $w_n \propto \exp\!\big(R^{(n)}/\lambda\big)$, where $\lambda$ is a temperature. The \textbf{improved CEM} (iCEM) \cite{icem} used by DexSim2Real$^2$ adds several refinements that reduce the number of samples needed for real-time planning: temporally correlated (coloured-noise) sampling that produces smoother action sequences, keeping a fraction of elites between iterations and between time steps, shifting the previous solution to initialize the next step, and executing the best sampled action rather than the mean. Algorithm~\ref{alg:cem} summarizes sampling-based MPC.
+MPPI instead updates the mean with an exponentially weighted average of \emph{all} samples, $\mu \leftarrow \sum_n w_n A^{(n)}$ with $w_n \propto \exp\!\big(R^{(n)}/\lambda\big)$, where $\lambda$ is a temperature. The \textbf{improved CEM} (iCEM) used by DexSim2Real$^2$ adds several refinements that reduce the number of samples needed for real-time planning: temporally correlated (coloured-noise) sampling that produces smoother action sequences, keeping a fraction of elites between iterations and between time steps, shifting the previous solution to initialize the next step, and executing the best sampled action rather than the mean. Algorithm~\ref{alg:cem} summarizes sampling-based MPC.
 
 \begin{algorithm}[htbp]
 \caption{Sampling-based MPC with the (improved) Cross-Entropy Method}\label{alg:cem}
@@ -633,7 +633,7 @@ MPPI instead updates the mean with an exponentially weighted average of \emph{al
 \end{algorithmic}
 \end{algorithm}
 
-\paragraph{} The computational cost of sampling-based MPC grows with the dimension of the action space, because the number of samples needed to cover the space grows rapidly with dimension. This is why DexSim2Real$^2$ employs \textbf{eigengrasps} \cite{eigengrasp}: Principal Component Analysis (PCA) is applied to a large dataset of hand postures, and the hand configuration is expressed as a linear combination of the first $m$ principal components,
+\paragraph{} The computational cost of sampling-based MPC grows with the dimension of the action space, because the number of samples needed to cover the space grows rapidly with dimension. This is why DexSim2Real$^2$ employs \textbf{eigengrasps}: Principal Component Analysis (PCA) is applied to a large dataset of hand postures, and the hand configuration is expressed as a linear combination of the first $m$ principal components,
 \begin{equation}
 q_h = \bar{q}_h + \sum_{i=1}^{m} \alpha_i\, e_i, \qquad m \ll d_{\mathrm{hand}},
 \label{eq:eigen_general}
@@ -642,7 +642,7 @@ where $e_i$ are the eigenvectors with the largest eigenvalues and $\alpha_i$ are
 
 \section{Explicit Scene Representations: 3D Gaussian Splatting}
 
-\paragraph{} \textbf{3D Gaussian Splatting} (3DGS) \cite{kerbl2023} represents a scene as a set of anisotropic 3D Gaussians, each with a centre $\mu\in\mathbb{R}^3$, a covariance $\Sigma$, an opacity $\sigma$, and a colour $c$ (often represented with spherical harmonics). The density of a Gaussian at point $x$ is
+\paragraph{} \textbf{3D Gaussian Splatting} (3DGS) represents a scene as a set of anisotropic 3D Gaussians, each with a centre $\mu\in\mathbb{R}^3$, a covariance $\Sigma$, an opacity $\sigma$, and a colour $c$ (often represented with spherical harmonics). The density of a Gaussian at point $x$ is
 \begin{equation}
 G(x)=\exp\!\Big(-\tfrac{1}{2}(x-\mu)^{\top}\Sigma^{-1}(x-\mu)\Big),\qquad \Sigma = R\,S\,S^{\top}R^{\top},
 \label{eq:gauss}
@@ -652,17 +652,17 @@ where the covariance is factorized into a rotation $R$ (stored as a quaternion $
 C(p)=\sum_{i=1}^{N} c_i\,\alpha_i \prod_{j=1}^{i-1}(1-\alpha_j),\qquad \alpha_i=\sigma_i\, e^{-\frac{1}{2}(p-\mu^{2d}_i)^{\top}{\Sigma'_i}^{-1}(p-\mu^{2d}_i)}.
 \label{eq:alphablend}
 \end{equation}
-Because this rasterization is differentiable, the Gaussian parameters can be optimized directly from multi-view images using photometric losses, without any 3D ground truth. Compared with Neural Radiance Fields \cite{nerf}, which query a neural network at many points along each camera ray, 3DGS renders in real time and provides an explicit point-based geometry that can be manipulated, segmented, and registered. These properties make it attractive as a world representation for robotics: GAF \cite{p2} extends each Gaussian with a motion vector $\Delta\mu$ so that the same representation also encodes how the scene will change.
+Because this rasterization is differentiable, the Gaussian parameters can be optimized directly from multi-view images using photometric losses, without any 3D ground truth. Compared with Neural Radiance Fields, which query a neural network at many points along each camera ray, 3DGS renders in real time and provides an explicit point-based geometry that can be manipulated, segmented, and registered. These properties make it attractive as a world representation for robotics: GAF \cite{p2} extends each Gaussian with a motion vector $\Delta\mu$ so that the same representation also encodes how the scene will change.
 
 \section{Diffusion Models for Action Generation}
 
-\paragraph{} \textbf{Denoising diffusion probabilistic models} (DDPMs) \cite{ddpm} learn to generate data by reversing a gradual noising process. The forward process corrupts a clean sample $x_0$ into $x_k$ according to
+\paragraph{} \textbf{Denoising diffusion probabilistic models} (DDPMs) learn to generate data by reversing a gradual noising process. The forward process corrupts a clean sample $x_0$ into $x_k$ according to
 \begin{equation}
 q(x_k\mid x_0)=\mathcal{N}\big(\sqrt{\bar{\alpha}_k}\,x_0,\;(1-\bar{\alpha}_k)\,I\big),
 \end{equation}
-where $\bar{\alpha}_k$ follows a fixed noise schedule. A network $\epsilon_\theta$ is trained to predict the injected noise, $\mathcal{L}=\mathbb{E}_{x_0,\epsilon,k}\big[\|\epsilon-\epsilon_\theta(x_k,k)\|^2\big]$, and new samples are generated by iteratively denoising pure Gaussian noise. \textbf{Denoising Diffusion Implicit Models} (DDIM) \cite{ddim} define a non-Markovian sampling process that produces high-quality samples in far fewer steps.
+where $\bar{\alpha}_k$ follows a fixed noise schedule. A network $\epsilon_\theta$ is trained to predict the injected noise, $\mathcal{L}=\mathbb{E}_{x_0,\epsilon,k}\big[\|\epsilon-\epsilon_\theta(x_k,k)\|^2\big]$, and new samples are generated by iteratively denoising pure Gaussian noise. \textbf{Denoising Diffusion Implicit Models} (DDIM) define a non-Markovian sampling process that produces high-quality samples in far fewer steps.
 
-\paragraph{} In robotics, \textbf{Diffusion Policy} \cite{diffusionpolicy} applies this machinery to action sequences: the ``data'' $x_0$ is a short sequence of future end-effector poses, and the denoiser is conditioned on the current observation. Diffusion policies naturally represent multi-modal action distributions (for example, going around an obstacle on either side), which is difficult for regression-based policies. GAF uses a diffusion model conditioned on renderings of candidate gripper poses (following Render-and-Diffuse \cite{renderdiffuse}) to refine its initial action estimate, and at inference time it needs only three DDIM iterations.
+\paragraph{} In robotics, \textbf{Diffusion Policy} applies this machinery to action sequences: the ``data'' $x_0$ is a short sequence of future end-effector poses, and the denoiser is conditioned on the current observation. Diffusion policies naturally represent multi-modal action distributions (for example, going around an obstacle on either side), which is difficult for regression-based policies. GAF uses a diffusion model conditioned on renderings of candidate gripper poses (following Render-and-Diffuse) to refine its initial action estimate, and at inference time it needs only three DDIM iterations.
 
 \section{Foundation Models as World Knowledge}
 
@@ -674,10 +674,10 @@ where $\bar{\alpha}_k$ follows a fixed noise schedule. A network $\epsilon_\thet
 
 \paragraph{} Training in simulation is fast, safe, and cheap, but policies and models trained in simulation must ultimately operate on real hardware. The \textbf{sim-to-real gap} arises from unmodeled dynamics (friction, compliance, actuator delays), sensor differences (noise and artifacts in real depth images), and visual appearance. Several techniques are used to bridge it:
 \begin{itemize}
-  \item \textbf{Domain randomization} \cite{tobin2017}: physical parameters (mass, friction, motor strength) and sensor properties are randomized during training so that the real world appears as just another sample from the training distribution.
+  \item \textbf{Domain randomization}: physical parameters (mass, friction, motor strength) and sensor properties are randomized during training so that the real world appears as just another sample from the training distribution.
   \item \textbf{Latency and noise modelling}: sensing and computation delays are simulated explicitly; for example, WMP delivers depth images to the policy with a 100 ms delay in simulation.
-  \item \textbf{Privileged learning} \cite{lee2020}: a teacher policy with access to ground-truth simulator information is trained first, and a student policy that sees only onboard sensors is trained to imitate it.
-  \item \textbf{Asymmetric actor--critic} \cite{asymac}: the critic receives privileged information during training, while the actor uses only deployable observations.
+  \item \textbf{Privileged learning}: a teacher policy with access to ground-truth simulator information is trained first, and a student policy that sees only onboard sensors is trained to imitate it.
+  \item \textbf{Asymmetric actor--critic}: the critic receives privileged information during training, while the actor uses only deployable observations.
   \item \textbf{Real-to-sim-to-real}: a digital twin of the real object or scene is reconstructed, behaviors are planned or learned on the twin, and the result is executed on the real system. This is the strategy of DexSim2Real$^2$.
 \end{itemize}
 
@@ -693,7 +693,7 @@ where $\bar{\alpha}_k$ follows a fixed noise schedule. A network $\epsilon_\thet
 
 \paragraph{} \textbf{Locomotion metrics.} The average RL return, and the velocity tracking error, defined as the mean squared error between the commanded planar velocity $v^{\mathrm{cmd}}_{xy}$ and the achieved velocity $v_{xy}$ \cite{p3}.
 
-\paragraph{} \textbf{Navigation metrics.} Success Rate (SR) and Success weighted by (normalized inverse) Path Length (SPL) \cite{anderson2018}:
+\paragraph{} \textbf{Navigation metrics.} Success Rate (SR) and Success weighted by (normalized inverse) Path Length (SPL):
 \begin{equation}
 \mathrm{SPL}=\frac{1}{N}\sum_{i=1}^{N} S_i\,\frac{\ell_i}{\max(p_i,\ell_i)},
 \label{eq:spl}
@@ -752,11 +752,11 @@ Together, these studies illustrate the evolution of embodied agents from reactiv
 
 \section{DexSim2Real$^2$: Building Explicit World Model for Precise Articulated Object Dexterous Manipulation}
 
-This paper, the base paper of the seminar, proposes a robot learning framework for precise, goal-conditioned manipulation of unseen articulated objects using suction grippers, two-finger grippers, and multi-finger dexterous hands \cite{p1}. Its core idea is to use a physics simulator as the robot's ``mental model'': the robot first interacts with the object to reveal its structure, then constructs an explicit digital twin of the object in simulation, and finally plans long-horizon manipulation trajectories inside this world model using sampling-based Model Predictive Control (MPC), without demonstrations or reinforcement learning. The work extends the authors' earlier ICRA paper Sim2Real$^2$ \cite{sim2real2}.
+This paper, the base paper of the seminar, proposes a robot learning framework for precise, goal-conditioned manipulation of unseen articulated objects using suction grippers, two-finger grippers, and multi-finger dexterous hands \cite{p1}. Its core idea is to use a physics simulator as the robot's ``mental model'': the robot first interacts with the object to reveal its structure, then constructs an explicit digital twin of the object in simulation, and finally plans long-horizon manipulation trajectories inside this world model using sampling-based Model Predictive Control (MPC), without demonstrations or reinforcement learning. The work extends the authors' earlier ICRA paper Sim2Real$^2$.
 
 \subsection{Problem Statement and Motivation}
 
-\paragraph{} Articulated objects---drawers, cabinets, laptops, lamps, refrigerators---are ubiquitous in daily life, and manipulating them is considerably harder than pick-and-place. In pick-and-place only the start and end poses of the end effector are constrained, whereas articulated object manipulation requires the end effector to follow a trajectory dictated by the object's kinematic constraint. Most existing approaches train a neural network with RL or IL to map object states to actions, but the state distribution of articulated objects is high-dimensional and complex, so such networks struggle to learn the correlation even with hundreds of demonstrations and millions of interactions. Methods such as FlowBot and UMPNet \cite{umpnet} predict one-step actions from a single frame and are tied to suction grippers.
+\paragraph{} Articulated objects---drawers, cabinets, laptops, lamps, refrigerators---are ubiquitous in daily life, and manipulating them is considerably harder than pick-and-place. In pick-and-place only the start and end poses of the end effector are constrained, whereas articulated object manipulation requires the end effector to follow a trajectory dictated by the object's kinematic constraint. Most existing approaches train a neural network with RL or IL to map object states to actions, but the state distribution of articulated objects is high-dimensional and complex, so such networks struggle to learn the correlation even with hundreds of demonstrations and millions of interactions. Methods such as FlowBot and UMPNet predict one-step actions from a single frame and are tied to suction grippers.
 
 \paragraph{} DexSim2Real$^2$ addresses the \emph{goal-conditioned} version of the problem: given an unseen articulated object and a target joint state $s_{\mathrm{target}}$, drive the object precisely to that state with any of several end effectors. The key observation is that a single view of an object cannot reveal its full structure---it is hard to tell from one look whether a kitchen door has a rotating or a sliding hinge---but after the door is moved slightly, the two observations together make the structure obvious. The framework therefore separates the problem into a \emph{generalizable} part (predicting a simple interaction and building a model) and an \emph{instance-specific} part (planning with the model of the one object in front of the robot).
 
@@ -775,9 +775,9 @@ This paper, the base paper of the seminar, proposes a robot learning framework f
 
 \paragraph{} The purpose of interactive perception is only to \emph{change} the state of each movable part; the interaction does not need to be precise. Affordance estimation depends only on the object and therefore generalizes better to novel objects than a full manipulation policy. Two sources of affordance knowledge are studied.
 
-\paragraph{} \textbf{Learning from self-supervised interaction in simulation.} The framework uses Where2Act \cite{where2act}, which contains an Actionability Scoring Module that predicts a per-point score $a_p$ (the likelihood that acting at that point moves a part), an Action Proposal Module that proposes gripper poses for a point, and an Action Scoring Module that predicts the success likelihood of each proposal. Because Where2Act assumes a free-flying gripper and ignores the robot's kinematics, many top-scoring proposals are unreachable. DexSim2Real$^2$ therefore selects the $n_p$ points with the highest actionability, keeps the $n_a$ best actions for each, and attempts motion planning sequentially until a feasible action is found ($n_p=n_a=10$ in the experiments).
+\paragraph{} \textbf{Learning from self-supervised interaction in simulation.} The framework uses Where2Act, which contains an Actionability Scoring Module that predicts a per-point score $a_p$ (the likelihood that acting at that point moves a part), an Action Proposal Module that proposes gripper poses for a point, and an Action Scoring Module that predicts the success likelihood of each proposal. Because Where2Act assumes a free-flying gripper and ignores the robot's kinematics, many top-scoring proposals are unreachable. DexSim2Real$^2$ therefore selects the $n_p$ points with the highest actionability, keeps the $n_a$ best actions for each, and attempts motion planning sequentially until a feasible action is found ($n_p=n_a=10$ in the experiments).
 
-\paragraph{} \textbf{Learning from real-world egocentric human videos.} Simulation-based affordance learning requires interactable 3D assets, which are scarce. The authors therefore also use the Vision-Robotics Bridge (VRB) \cite{vrb}, trained on videos of humans manipulating objects, which predicts a 2D contact heatmap and a 2D post-contact trajectory vector in the image. To lift these 2D predictions into a 3D robot motion, a novel \textbf{pixel projection} method is proposed (Figure~\ref{fig:dex_aff}). Given the RGB image $I_0$, depth map $D_0$, camera intrinsics $K$ and extrinsics $H_0$, a virtual camera with pose $H$ is placed and a virtual image $\hat{I}_0$ is synthesized by image warping. VRB is run on both images, producing contact points $c_0=(u_0,v_0)$, $\hat{c}_0$ and post-contact vectors $\tau_0=(u_0'-u_0,\,v_0'-v_0)$, $\hat{\tau}_0$. The 3D contact point in the robot base frame is
+\paragraph{} \textbf{Learning from real-world egocentric human videos.} Simulation-based affordance learning requires interactable 3D assets, which are scarce. The authors therefore also use the Vision-Robotics Bridge (VRB), trained on videos of humans manipulating objects, which predicts a 2D contact heatmap and a 2D post-contact trajectory vector in the image. To lift these 2D predictions into a 3D robot motion, a novel \textbf{pixel projection} method is proposed (Figure~\ref{fig:dex_aff}). Given the RGB image $I_0$, depth map $D_0$, camera intrinsics $K$ and extrinsics $H_0$, a virtual camera with pose $H$ is placed and a virtual image $\hat{I}_0$ is synthesized by image warping. VRB is run on both images, producing contact points $c_0=(u_0,v_0)$, $\hat{c}_0$ and post-contact vectors $\tau_0=(u_0'-u_0,\,v_0'-v_0)$, $\hat{\tau}_0$. The 3D contact point in the robot base frame is
 \begin{equation}
 p_c = H_0^{-1}K^{-1}z_c\,[u_0,\;v_0,\;1]^{\top},
 \end{equation}
@@ -813,7 +813,7 @@ where $I_0, D_0$ come from the main RGB-D sensor, $I_c$ from $C$ additional unca
    \label{fig:dex_model}
 \end{figure}
 
-\paragraph{} \textbf{1) Canonical mesh generation.} For each state $k$, a controllable large-scale 3D generative model, Rodin \cite{rodin}, generates a textured canonical mesh $\tilde{A}^{(k)}$ conditioned on the masked multi-view images. Using 3D AIGC rather than direct depth fusion yields complete, high-quality geometry even for regions that are not visible from the main camera.
+\paragraph{} \textbf{1) Canonical mesh generation.} For each state $k$, a controllable large-scale 3D generative model, Rodin, generates a textured canonical mesh $\tilde{A}^{(k)}$ conditioned on the masked multi-view images. Using 3D AIGC rather than direct depth fusion yields complete, high-quality geometry even for regions that are not visible from the main camera.
 
 \paragraph{} \textbf{2) Mesh positioning and scaling.} The generated mesh is centred at the origin and normalized to unit size, so standard CAD-based pose estimators cannot be applied directly. The authors modify FoundationPose: images of $\tilde{A}^{(k)}$ are rendered under many pose hypotheses and ranked by similarity to $I_0^{(k)}$, and the best hypothesis is refined by aligning rendered edges to the mask $M_0^{(k)}$ using differentiable rendering, with the orientation constrained to rotate about the Z-axis for stability. Given the orientation and unscaled translation, an unscaled depth map $\tilde{D}_0^{(k)}$ is rendered and the metric scale is recovered as the ratio of real to rendered depth over the object mask:
 \begin{equation}
@@ -849,13 +849,13 @@ s^{(k)}=\frac{\sum_{M_0^{(k)}} D_0^{(k)}}{\sum_{M_0^{(k)}} \tilde{D}_0^{(k)}}.
 \end{algorithmic}
 \end{algorithm}
 
-\paragraph{} \textbf{4) Kinematic structure construction.} Finally, the part tree hierarchy, joint categories (prismatic or revolute), and joint configurations (axis direction and origin) are estimated following Liu et al. \cite{liu2023rearticulable}: per-part rigid transformations between frames are estimated and then projected onto a valid kinematic model. The result is exported in the Unified Robot Description Format (URDF), the meshes are convex-decomposed with VHACD \cite{vhacd} for stable contact simulation, and the twin is loaded into the SAPIEN simulator \cite{sapien}. Compared with Ditto \cite{ditto}, this pipeline handles objects with more than one movable part and produces significantly higher-quality geometry.
+\paragraph{} \textbf{4) Kinematic structure construction.} Finally, the part tree hierarchy, joint categories (prismatic or revolute), and joint configurations (axis direction and origin) are estimated following Liu et al.: per-part rigid transformations between frames are estimated and then projected onto a valid kinematic model. The result is exported in the Unified Robot Description Format (URDF), the meshes are convex-decomposed with VHACD for stable contact simulation, and the twin is loaded into the SAPIEN simulator. Compared with Ditto, this pipeline handles objects with more than one movable part and produces significantly higher-quality geometry.
 
 \subsection{Sampling-Based MPC with Eigengrasp}
 
-\paragraph{} With the digital twin in hand, the agent must find a trajectory that changes the joint state from $s_{\mathrm{initial}}$ to $s_{\mathrm{target}}$, i.e.\ achieve $\Delta s_{\mathrm{target}}=s_{\mathrm{target}}-s_{\mathrm{initial}}$. Because contacts between the end effector and the object make the objective non-smooth, the zeroth-order iCEM planner \cite{icem} (Section 2.5) is used. At each time step $t<T$ the action $a_t\in\mathbb{R}^{d}$ is an increment of the robot's joint positions, where $d=7$ for the suction gripper (7-DOF arm), $d=8$ for the two-finger gripper (arm plus gripper), and $d=7+d_{\mathrm{hand}}$ for a dexterous hand. The population, planning horizon $h$, and elite set size $E$ control the search.
+\paragraph{} With the digital twin in hand, the agent must find a trajectory that changes the joint state from $s_{\mathrm{initial}}$ to $s_{\mathrm{target}}$, i.e.\ achieve $\Delta s_{\mathrm{target}}=s_{\mathrm{target}}-s_{\mathrm{initial}}$. Because contacts between the end effector and the object make the objective non-smooth, the zeroth-order iCEM planner (Section 2.5) is used. At each time step $t<T$ the action $a_t\in\mathbb{R}^{d}$ is an increment of the robot's joint positions, where $d=7$ for the suction gripper (7-DOF arm), $d=8$ for the two-finger gripper (arm plus gripper), and $d=7+d_{\mathrm{hand}}$ for a dexterous hand. The population, planning horizon $h$, and elite set size $E$ control the search.
 
-\paragraph{} For dexterous hands, searching directly in the $7+16=23$-dimensional space of the Allegro Hand is computationally prohibitive and produces unnatural postures. The authors therefore generate a dataset of grasp postures with DexGraspNet \cite{dexgraspnet}---60{,}800 grasps across 474 objects for the Allegro Hand and the XHand---perform PCA, and keep the first $m$ eigenvectors $e_1,\ldots,e_m$. iCEM then searches over $a_t\in\mathbb{R}^{7+m}$ and the hand joint angles are recovered as
+\paragraph{} For dexterous hands, searching directly in the $7+16=23$-dimensional space of the Allegro Hand is computationally prohibitive and produces unnatural postures. The authors therefore generate a dataset of grasp postures with DexGraspNet---60{,}800 grasps across 474 objects for the Allegro Hand and the XHand---perform PCA, and keep the first $m$ eigenvectors $e_1,\ldots,e_m$. iCEM then searches over $a_t\in\mathbb{R}^{7+m}$ and the hand joint angles are recovered as
 \begin{equation}
 q_h=\sum_{i=1}^{m} a_i\, e_i .
 \end{equation}
@@ -901,7 +901,7 @@ Dexterous hand (Allegro, $m=2$) & $7+m=9$ & 50 & 100 & 10 & $\approx$3 min \\ \h
 
 \subsection{Results and Analysis}
 
-\paragraph{} \textbf{Suction gripper versus UMPNet.} UMPNet \cite{umpnet}, which also performs goal-conditioned articulated manipulation, is used as the baseline on laptops and cabinets with ten trials each. Table~\ref{tab:dex_suction} and Figure~\ref{fig:dex_charts}(a) show that DexSim2Real$^2$ roughly halves the error: $7.2^{\circ}$ versus $16.0^{\circ}$ on laptops and $6.8^{\circ}$ versus $15.3^{\circ}$ on cabinets. The authors attribute UMPNet's larger error to its fixed step size and to the limited information in a pair of current/goal images, whereas MPC over an explicit model uses continuous actions.
+\paragraph{} \textbf{Suction gripper versus UMPNet.} UMPNet, which also performs goal-conditioned articulated manipulation, is used as the baseline on laptops and cabinets with ten trials each. Table~\ref{tab:dex_suction} and Figure~\ref{fig:dex_charts}(a) show that DexSim2Real$^2$ roughly halves the error: $7.2^{\circ}$ versus $16.0^{\circ}$ on laptops and $6.8^{\circ}$ versus $15.3^{\circ}$ on cabinets. The authors attribute UMPNet's larger error to its fixed step size and to the limited information in a pair of current/goal images, whereas MPC over an explicit model uses continuous actions.
 
 {\renewcommand{\arraystretch}{1.2}
 \begin{table}[htbp]
@@ -946,7 +946,7 @@ Average $|\delta_r|$ & 21.5\% & 22.5\% & 26.4\% & 20.4\% \\ \hline
 
 \paragraph{} \textbf{Dexterous hand versus two-finger gripper.} On five simulated tasks with ten randomized initial conditions each, the Allegro Hand requires fewer steps than the Robotiq gripper on every task except laptop opening, which does not require precise contact. For example, the dexterous hand opens a drawer in 17 steps versus 22 for the gripper by exploiting its additional degrees of freedom.
 
-\paragraph{} \textbf{World model construction accuracy.} The digital twins are evaluated with the Relative Depth Error (RDE) between rendered and real depth, the IoU between rendered and ground-truth masks, and the joint axis position and angle errors. Table~\ref{tab:dex_model} and Figure~\ref{fig:dex_charts}(b) compare the axis angle error with ScrewNet \cite{screwnet}. The average angle error is below $9^{\circ}$ for all four categories, far lower than ScrewNet on laptops ($1.34^{\circ}$ vs.\ $23.15^{\circ}$) and drawers ($8.58^{\circ}$ vs.\ $23.21^{\circ}$). The lower IoU for lamps is attributed to their small image footprint. Deliberately corrupting the model shows that manipulation error correlates positively with modelling error, with joint \emph{position} errors having a stronger effect than orientation errors.
+\paragraph{} \textbf{World model construction accuracy.} The digital twins are evaluated with the Relative Depth Error (RDE) between rendered and real depth, the IoU between rendered and ground-truth masks, and the joint axis position and angle errors. Table~\ref{tab:dex_model} and Figure~\ref{fig:dex_charts}(b) compare the axis angle error with ScrewNet. The average angle error is below $9^{\circ}$ for all four categories, far lower than ScrewNet on laptops ($1.34^{\circ}$ vs.\ $23.15^{\circ}$) and drawers ($8.58^{\circ}$ vs.\ $23.21^{\circ}$). The lower IoU for lamps is attributed to their small image footprint. Deliberately corrupting the model shows that manipulation error correlates positively with modelling error, with joint \emph{position} errors having a stronger effect than orientation errors.
 
 {\renewcommand{\arraystretch}{1.2}
 \begin{table}[htbp]
@@ -1009,7 +1009,7 @@ Lamp & 2.12 & 0.80 & 0.009 & 7.95 & 9.38 \\ \hline
 \label{fig:dex_charts}
 \end{figure}
 
-\paragraph{} \textbf{Ablation of movable part segmentation and affordance.} Without the proposed segmentation module (i.e.\ jointly optimizing segmentation and motion as in \cite{liu2023rearticulable}), model construction succeeds on only 5/10 drawers instead of 10/10 and the drawer axis error doubles from $8.58^{\circ}$ to $16.04^{\circ}$; position errors also increase for laptops (0.022 to 0.048 m), cabinets, and lamps, and the baseline sometimes produces the wrong number of parts or wrong joint types. For affordance detection on closed objects, VRB finds handles on 17/20 cabinets versus 7/20 for Where2Act, and on 3/20 versus 1/20 small drawer handles; in over 90\% of real-world cases VRB proposes the better action, which the authors attribute to its training on real human videos and to the larger scale of video data compared with interactable 3D assets. The pixel projection method also produces better interaction directions than random 3D vectors consistent with the 2D affordance.
+\paragraph{} \textbf{Ablation of movable part segmentation and affordance.} Without the proposed segmentation module (i.e.\ jointly optimizing segmentation and motion as in the method of Liu et al.), model construction succeeds on only 5/10 drawers instead of 10/10 and the drawer axis error doubles from $8.58^{\circ}$ to $16.04^{\circ}$; position errors also increase for laptops (0.022 to 0.048 m), cabinets, and lamps, and the baseline sometimes produces the wrong number of parts or wrong joint types. For affordance detection on closed objects, VRB finds handles on 17/20 cabinets versus 7/20 for Where2Act, and on 3/20 versus 1/20 small drawer handles; in over 90\% of real-world cases VRB proposes the better action, which the authors attribute to its training on real human videos and to the larger scale of video data compared with interactable 3D assets. The pixel projection method also produces better interaction directions than random 3D vectors consistent with the 2D affordance.
 
 \paragraph{} \textbf{Multi-part objects and tool use.} Figure~\ref{fig:dex_multi}(a) shows reconstructed twins of a cabinet with two revolute doors and a refrigerator with two revolute joints and one prismatic joint, demonstrating that the pipeline handles varied kinematic structures. Because the world model is a physics simulator, it generalizes to actions never observed during interaction: when a drawer is out of reach or its gap is too small for the gripper, the robot can use a T-shaped tool or a semi-ring (Figure~\ref{fig:dex_multi}(b)). The only change needed is to replace the gripper tips with the tool in $r_{\mathrm{dist}}$; most other parameters are unchanged.
 
@@ -1042,7 +1042,7 @@ This research introduces a Vision-to-4D-to-Action (V-4D-A) paradigm in which man
 
 \subsection{Problem Statement and Motivation}
 
-\paragraph{} Vision-based manipulation methods fall into two paradigms (Figure~\ref{fig:gaf_paradigm}). \textbf{V-A} (vision-to-action) methods such as Diffusion Policy \cite{diffusionpolicy} map images directly to actions; they benefit from end-to-end learning and large image datasets but understand 3D structure only implicitly and struggle in high-precision tasks. \textbf{V-3D-A} (vision-to-3D-to-action) methods such as Act3D \cite{act3d} lift observations to point clouds or voxels, capturing spatial relationships more accurately, but require 3D data that is scarcer than images. Both share a deeper limitation: they model a \emph{static} snapshot of the scene, even though manipulation is inherently about how the scene---including the robot itself---will change. This creates a mismatch between static scene understanding and dynamic action generation. Prior Gaussian world models such as ManiGaussian \cite{manigaussian} and GWM deform Gaussians to predict the future, but use the prediction only as auxiliary supervision for policy training, and their low-fidelity reconstructions limit effectiveness.
+\paragraph{} Vision-based manipulation methods fall into two paradigms (Figure~\ref{fig:gaf_paradigm}). \textbf{V-A} (vision-to-action) methods such as Diffusion Policy map images directly to actions; they benefit from end-to-end learning and large image datasets but understand 3D structure only implicitly and struggle in high-precision tasks. \textbf{V-3D-A} (vision-to-3D-to-action) methods such as Act3D lift observations to point clouds or voxels, capturing spatial relationships more accurately, but require 3D data that is scarcer than images. Both share a deeper limitation: they model a \emph{static} snapshot of the scene, even though manipulation is inherently about how the scene---including the robot itself---will change. This creates a mismatch between static scene understanding and dynamic action generation. Prior Gaussian world models such as ManiGaussian and GWM deform Gaussians to predict the future, but use the prediction only as auxiliary supervision for policy training, and their low-fidelity reconstructions limit effectiveness.
 
 \begin{figure}[htbp]
    \centering
@@ -1061,7 +1061,7 @@ where $\mu\in\mathbb{R}^3$ is the Gaussian's position, $\Delta\mu\in\mathbb{R}^3
 
 \subsection{Architecture: Dynamic Gaussian Reconstruction}
 
-\paragraph{} GAF adopts a geometry-agnostic, \emph{pose-free} reconstruction approach. Unlike NeRF or classical 3DGS, which require dense calibrated views or geometric priors such as cost volumes, GAF reconstructs motion-augmented Gaussians from only two unposed RGB images and their intrinsics $\{I^t_v,k^t_v\}_{v=1}^{V}$, in a canonical frame aligned with the first view (Figure~\ref{fig:gaf_recon}). The images are split into patches, concatenated, and processed by a shared-weight Vision Transformer with cross-view attention, initialized from MASt3R \cite{mast3r}. Three DPT-style \cite{dpt} heads decode the features: a Gaussian Center Head $h_{\mathrm{center}}$ predicts positions, a Gaussian Params Head $h_{\mathrm{feature}}$ predicts appearance, and a Motion Prediction Head $h_{\mathrm{motion}}$ predicts per-point displacements:
+\paragraph{} GAF adopts a geometry-agnostic, \emph{pose-free} reconstruction approach. Unlike NeRF or classical 3DGS, which require dense calibrated views or geometric priors such as cost volumes, GAF reconstructs motion-augmented Gaussians from only two unposed RGB images and their intrinsics $\{I^t_v,k^t_v\}_{v=1}^{V}$, in a canonical frame aligned with the first view (Figure~\ref{fig:gaf_recon}). The images are split into patches, concatenated, and processed by a shared-weight Vision Transformer with cross-view attention, initialized from MASt3R. Three DPT-style heads decode the features: a Gaussian Center Head $h_{\mathrm{center}}$ predicts positions, a Gaussian Params Head $h_{\mathrm{feature}}$ predicts appearance, and a Motion Prediction Head $h_{\mathrm{motion}}$ predicts per-point displacements:
 \begin{align}
 \mathcal{H}_{\mathrm{Gauss}}\big(\mathrm{ViT}(\{I^t_v,k^t_v\}_{v=1}^{V})\big) &= \{\mu^t_j,c^t_j,\sigma^t_j,r^t_j,s^t_j\}_{j=1}^{V\times H\times W},\\
 h_{\mathrm{motion}}\big(\mathrm{ViT}(\{I^t_v,k^t_v\}_{v=1}^{V})\big) &= \{\Delta\mu^{t\to t+\Delta t}_j\}.
@@ -1082,7 +1082,7 @@ where the $t$ terms enforce fidelity to the current observation and the $t+\Delt
 
 \subsection{Init Action Computation}
 
-\paragraph{} Because the gripper is rigid, its motion between the current and predicted future scenes is a rigid transformation. GAF extracts the gripper Gaussians $\mu_{\mathrm{gripper}}$ and their future counterparts $(\mu+\Delta\mu)_{\mathrm{gripper}}$ and estimates the end-effector transformation $T^{t\to t+\Delta t}\in SE(3)$ with Iterative Closest Point (ICP) \cite{gicp}:
+\paragraph{} Because the gripper is rigid, its motion between the current and predicted future scenes is a rigid transformation. GAF extracts the gripper Gaussians $\mu_{\mathrm{gripper}}$ and their future counterparts $(\mu+\Delta\mu)_{\mathrm{gripper}}$ and estimates the end-effector transformation $T^{t\to t+\Delta t}\in SE(3)$ with Iterative Closest Point (ICP):
 \begin{equation}
 T^{t\to t+\Delta t}=\arg\min_{T}\sum_{k\in\mathrm{gripper}}\big\|T(\mu_k)-(\mu+\Delta\mu)_k\big\|^2 .
 \end{equation}
@@ -1090,7 +1090,7 @@ This transformation is interpolated into a sequence over discrete time steps, fo
 
 \subsection{Manipulation with GAF: Action-Vision-Aligned Denoising}
 
-\paragraph{} Since GAF is trained only on visual data, its init actions are visually plausible but not necessarily physically feasible. A refinement stage (Figure~\ref{fig:paper2_wm}) therefore uses a diffusion model and a small amount of real action data, following Render-and-Diffuse \cite{renderdiffuse}. For a candidate relative action $a$, the gripper's new world pose is $T^{w}_{g_{\mathrm{new}}}=T^{w}_{g}\times a$, and its CAD model is rendered into each calibrated camera $c$:
+\paragraph{} Since GAF is trained only on visual data, its init actions are visually plausible but not necessarily physically feasible. A refinement stage (Figure~\ref{fig:paper2_wm}) therefore uses a diffusion model and a small amount of real action data, following Render-and-Diffuse. For a candidate relative action $a$, the gripper's new world pose is $T^{w}_{g_{\mathrm{new}}}=T^{w}_{g}\times a$, and its CAD model is rendered into each calibrated camera $c$:
 \begin{equation}
 R_c=\mathrm{Render}\big(T_{w2c}\times T^{w}_{g}\times a,\;K_c\big).
 \end{equation}
@@ -1109,7 +1109,7 @@ where $D$ is the denoising direction of the gripper, $\epsilon$ the noise added 
 
 \subsection{Experimental Setup and Implementation}
 
-\paragraph{} Simulation experiments use nine RLBench \cite{rlbench} tasks covering fine-grained placement, occlusion-rich interactions, and articulated objects, with 20 demonstrations per task and evaluation on 100 unseen object poses. Baselines are Diffusion Policy (V-A), Act3D (V-3D-A), and ManiGaussian (Gaussian world model), with hyper-parameters matched for fairness. All methods use two external cameras and a wrist camera ($128\times128$ in simulation, $1280\times720$ in the real world). Table~\ref{tab:gaf_impl} summarizes implementation details.
+\paragraph{} Simulation experiments use nine RLBench tasks covering fine-grained placement, occlusion-rich interactions, and articulated objects, with 20 demonstrations per task and evaluation on 100 unseen object poses. Baselines are Diffusion Policy (V-A), Act3D (V-3D-A), and ManiGaussian (Gaussian world model), with hyper-parameters matched for fairness. All methods use two external cameras and a wrist camera ($128\times128$ in simulation, $1280\times720$ in the real world). Table~\ref{tab:gaf_impl} summarizes implementation details.
 
 {\renewcommand{\arraystretch}{1.2}
 \begin{table}[htbp]
@@ -1212,7 +1212,7 @@ This paper presents a simple yet effective end-to-end framework that combines Mo
 
 \subsection{Problem Statement and Motivation}
 
-\paragraph{} Reinforcement learning in simulation followed by sim-to-real transfer has produced robust legged locomotion. Blind policies that use only proprioception can walk over slopes and stairs, but terrains such as gaps and pits must be perceived \emph{in advance}, which requires vision. Learning directly from dense depth pixels with RL is extremely data-inefficient, and because a forward-facing camera cannot see beneath the robot, the policy must also remember past observations. The dominant solution is \textbf{privileged learning} \cite{lee2020,parkour}: a teacher policy is trained with low-dimensional privileged information such as \emph{scandots} (terrain heights sampled around the robot), and a vision-based student policy is then trained to imitate it.
+\paragraph{} Reinforcement learning in simulation followed by sim-to-real transfer has produced robust legged locomotion. Blind policies that use only proprioception can walk over slopes and stairs, but terrains such as gaps and pits must be perceived \emph{in advance}, which requires vision. Learning directly from dense depth pixels with RL is extremely data-inefficient, and because a forward-facing camera cannot see beneath the robot, the policy must also remember past observations. The dominant solution is \textbf{privileged learning}: a teacher policy is trained with low-dimensional privileged information such as \emph{scandots} (terrain heights sampled around the robot), and a vision-based student policy is then trained to imitate it.
 
 \paragraph{} Privileged learning has two limitations. First, the student cannot perfectly recover the teacher's behaviour, and the gap grows when the privileged information and images carry different information. Second, privileged information must be designed by hand for each terrain. As Figure~\ref{fig:wmp_scandots} shows, sparse scandots cannot resolve the precise distance to the walls of a narrow \emph{Tilt} passage and cannot represent off-ground obstacles such as the bar of a \emph{Crawl} obstacle, whereas depth images represent both. Inspired by the observation that animals learn to traverse terrain through an internal model of the world rather than privileged knowledge, WMP asks whether a learned world model can serve as the perception module.
 
@@ -1244,7 +1244,7 @@ with $\dot{q}_d=0$ and $(K_p,K_d)=(40,\,1.0)$ on the real robot.
 \text{Dynamic predictor:}\quad & \hat{z}_t \sim p_\phi(\cdot\mid h_t),\\
 \text{Decoder:}\quad & \hat{o}_t \sim p_\phi(\cdot\mid h_t,\, z_t).
 \end{align}
-The recurrent model is a GRU; the encoder and decoder use CNNs for the depth image and MLPs for proprioception. Note that the recurrent update consumes the whole action sequence $a_{t-k:t-1}$ executed since the last update. Following DreamerV3 \cite{hafner2023dreamerv3}, the components are trained jointly on trajectory segments of length $L$ with the loss
+The recurrent model is a GRU; the encoder and decoder use CNNs for the depth image and MLPs for proprioception. Note that the recurrent update consumes the whole action sequence $a_{t-k:t-1}$ executed since the last update. Following DreamerV3, the components are trained jointly on trajectory segments of length $L$ with the loss
 \begin{equation}
 \mathcal{L}(\phi)=\mathbb{E}_{q_\phi}\Big[\sum_{t=n\cdot k}^{L} -\ln p_\phi(o_t\mid z_t,h_t) + \beta\,\mathrm{KL}\big(q_\phi(\cdot\mid h_t,o_t)\,\|\,p_\phi(\cdot\mid h_t)\big)\Big],
 \end{equation}
@@ -1263,7 +1263,7 @@ where $n$ is a non-negative integer. Predicting proprioception as well as depth 
 \begin{equation}
 a_{t+i}\sim\pi_\theta\big(\cdot\mid o^p_{t+i},\,\mathrm{sg}(h_t)\big),\qquad \forall i\in[0,k-1],
 \end{equation}
-where $\mathrm{sg}(\cdot)$ is the stop-gradient operator, so policy gradients do not alter the world model. An \textbf{asymmetric actor--critic} \cite{asymac} is used, in which the critic additionally observes the privileged information:
+where $\mathrm{sg}(\cdot)$ is the stop-gradient operator, so policy gradients do not alter the world model. An \textbf{asymmetric actor--critic} is used, in which the critic additionally observes the privileged information:
 \begin{equation}
 v(s_{t+i})\sim V_\theta\big(\cdot\mid o^p_{t+i},\,\mathrm{sg}(h_t),\,s^{\mathrm{pri}}_{t+i}\big).
 \end{equation}
@@ -1271,13 +1271,13 @@ The authors find that $h_t$ is essential even for the critic, because scandots c
 
 \subsection{Training Environment and Rewards}
 
-\paragraph{} Training uses the \texttt{legged\_gym} codebase \cite{rudin2022} on the Isaac Gym simulator \cite{isaacgym} with 4096 parallel Unitree A1 robots on six terrain types---Slope, Stair, Gap, Climb, Tilt, and Crawl---with increasing difficulty levels and the terrain curriculum of Rudin et al.: a robot is promoted when it crosses its terrain and demoted when it travels less than half the commanded distance. The policy acts at 50 Hz (0.02 s per step); depth images are computed every $k$ steps and delivered with a 100 ms latency to aid transfer, and physical parameters are randomized.
+\paragraph{} Training uses the \texttt{legged\_gym} codebase on the Isaac Gym simulator with 4096 parallel Unitree A1 robots on six terrain types---Slope, Stair, Gap, Climb, Tilt, and Crawl---with increasing difficulty levels and the terrain curriculum of Rudin et al.: a robot is promoted when it crosses its terrain and demoted when it travels less than half the commanded distance. The policy acts at 50 Hz (0.02 s per step); depth images are computed every $k$ steps and delivered with a 100 ms latency to aid transfer, and physical parameters are randomized.
 
 \paragraph{} The robot tracks a command $(v^{\mathrm{cmd}}_x,v^{\mathrm{cmd}}_y,\omega^{\mathrm{cmd}}_z)$. Instead of hand-selected waypoints, a simple clipped velocity-tracking reward is used,
 \begin{equation}
 r_{\mathrm{tracking}}=\exp\!\Big(-\big(\min(v_{xy},\,v^{\mathrm{cmd}}_{xy}+0.1)-v^{\mathrm{cmd}}_{xy}\big)^2/\sigma\Big),
 \end{equation}
-which lets the robot exceed the commanded speed when necessary, for example to jump a gap. Penalties discourage getting stuck or turning around obstacles, and an Adversarial Motion Priors (AMP) \cite{amp} style reward encourages natural gaits:
+which lets the robot exceed the commanded speed when necessary, for example to jump a gap. Penalties discourage getting stuck or turning around obstacles, and an Adversarial Motion Priors (AMP) style reward encourages natural gaits:
 \begin{equation}
 r_{\mathrm{style}}(s,s')=\max\!\big[0,\;1-0.25\,(D_\psi(s,s')-1)^2\big],
 \end{equation}
@@ -1285,7 +1285,7 @@ where the discriminator $D_\psi$ is trained with a least-squares objective and g
 
 \subsection{Simulation Results}
 
-\paragraph{} WMP is compared with a \textbf{Teacher} (oracle with scandots), a \textbf{Student} reproduced from Cheng et al.\ \cite{parkour} (ConvNet-RNN imitating the teacher from depth), a \textbf{Blind} ablation without depth, and \textbf{WMP w/o Prop} without proprioception in the world model. Table~\ref{tab:wmp_sim} and Figure~\ref{fig:wmp_chart} report returns and velocity tracking errors averaged over 100 trajectories. WMP attains near-teacher returns on all terrains where the teacher is applicable (e.g.\ 32.37 vs.\ 32.80 on Gap) while the student falls far behind (27.07). Removing depth collapses performance on every terrain except Slope, and removing proprioception degrades performance slightly. Teacher and Student are not applicable to Tilt and Crawl because scandots cannot describe these terrains.
+\paragraph{} WMP is compared with a \textbf{Teacher} (oracle with scandots), a \textbf{Student} reproduced from Cheng et al.\ (ConvNet-RNN imitating the teacher from depth), a \textbf{Blind} ablation without depth, and \textbf{WMP w/o Prop} without proprioception in the world model. Table~\ref{tab:wmp_sim} and Figure~\ref{fig:wmp_chart} report returns and velocity tracking errors averaged over 100 trajectories. WMP attains near-teacher returns on all terrains where the teacher is applicable (e.g.\ 32.37 vs.\ 32.80 on Gap) while the student falls far behind (27.07). Removing depth collapses performance on every terrain except Slope, and removing proprioception degrades performance slightly. Teacher and Student are not applicable to Tilt and Crawl because scandots cannot describe these terrains.
 
 {\renewcommand{\arraystretch}{1.2}
 \begin{table}[htbp]
@@ -1384,7 +1384,7 @@ This study proposes a fully modular, training-free world-model framework for Zer
 
 \subsection{Problem Statement and Motivation}
 
-\paragraph{} In object goal navigation, an agent placed in an unseen indoor environment must find and stop near an instance of a given category (e.g.\ \emph{bed}, \emph{sofa}, \emph{toilet}). In the zero-shot setting the categories and environments are not seen during training. Existing methods are either \emph{network-based}, training policies with RL or IL on large datasets, or \emph{map-based}, building semantic maps and choosing frontiers or waypoints; the latter depend on accurate, complex map construction and do not fully exploit VLMs trained on egocentric images. Most importantly, both kinds of methods must actually interact with the environment to understand it, rather than anticipating the outcomes of their choices. VLFM \cite{vlfm} builds a value map of target likelihood using BLIP-2, but its limited reasoning makes complex planning difficult. Humans, by contrast, can imagine a room layout from visual cues and common design patterns---walking along a corridor usually leads to new rooms, and searching a bathroom for a sofa is unwise. WMNav hypothesizes that VLMs, trained on vast amounts of first-person imagery, have acquired enough commonsense to play the role of such a world model (Figure~\ref{fig:wmnav_intro}).
+\paragraph{} In object goal navigation, an agent placed in an unseen indoor environment must find and stop near an instance of a given category (e.g.\ \emph{bed}, \emph{sofa}, \emph{toilet}). In the zero-shot setting the categories and environments are not seen during training. Existing methods are either \emph{network-based}, training policies with RL or IL on large datasets, or \emph{map-based}, building semantic maps and choosing frontiers or waypoints; the latter depend on accurate, complex map construction and do not fully exploit VLMs trained on egocentric images. Most importantly, both kinds of methods must actually interact with the environment to understand it, rather than anticipating the outcomes of their choices. VLFM builds a value map of target likelihood using BLIP-2, but its limited reasoning makes complex planning difficult. Humans, by contrast, can imagine a room layout from visual cues and common design patterns---walking along a corridor usually leads to new rooms, and searching a bathroom for a sofa is unwise. WMNav hypothesizes that VLMs, trained on vast amounts of first-person imagery, have acquired enough commonsense to play the role of such a world model (Figure~\ref{fig:wmnav_intro}).
 
 \begin{figure}[htbp]
    \centering
@@ -1439,7 +1439,7 @@ Comparing the plan with the new observation provides feedback that mitigates hal
 
 \subsection{Two-Stage Action Proposer}
 
-\paragraph{} Candidate actions are generated following VLMNav \cite{vlmnav}: $K$ polar vectors are sampled at regular angular intervals $\Delta\theta$ within the navigable area of $I_t(\alpha)$, giving $A^{\mathrm{init}}_t=\{(r_{t,i},\theta_{t,i})\}_{i=1}^{K}$. Actions leading into already-explored regions are filtered out using an exploration state map, distances and angular spacing are constrained, and the remaining $K'$ candidates $A^{\mathrm{cand}}_t$ are drawn as numbered arrows on the image to produce $I^{\mathrm{ann}}_t$ (Figure~\ref{fig:wmnav_action}). Decision making is split into two stages:
+\paragraph{} Candidate actions are generated following VLMNav: $K$ polar vectors are sampled at regular angular intervals $\Delta\theta$ within the navigable area of $I_t(\alpha)$, giving $A^{\mathrm{init}}_t=\{(r_{t,i},\theta_{t,i})\}_{i=1}^{K}$. Actions leading into already-explored regions are filtered out using an exploration state map, distances and angular spacing are constrained, and the remaining $K'$ candidates $A^{\mathrm{cand}}_t$ are drawn as numbered arrows on the image to produce $I^{\mathrm{ann}}_t$ (Figure~\ref{fig:wmnav_action}). Decision making is split into two stages:
 \begin{itemize}
   \item \textbf{Exploration stage:} ReasonVLM, configured as ActionVLM, chooses the candidate that best serves the current subtask:
   \begin{equation}
@@ -1460,7 +1460,7 @@ Comparing the plan with the new observation provides feedback that mitigates hal
 
 \subsection{Experimental Setup}
 
-\paragraph{} WMNav is evaluated in the Habitat simulator on three benchmarks: \textbf{HM3D v0.1} \cite{hm3d} (2000 validation episodes in 20 environments, 6 goal categories; used in the Habitat 2022 ObjectNav challenge), \textbf{HM3D v0.2} (1000 validation episodes with improved geometry and semantic labels), and \textbf{MP3D} \cite{mp3d} (11 scenes, 2195 validation episodes, 21 goal categories). Metrics are SR and SPL (Equation~\ref{eq:spl}). Table~\ref{tab:wmnav_setup} lists the agent configuration; Gemini VLMs are used by default for their low cost and high effectiveness.
+\paragraph{} WMNav is evaluated in the Habitat simulator on three benchmarks: \textbf{HM3D v0.1} (2000 validation episodes in 20 environments, 6 goal categories; used in the Habitat 2022 ObjectNav challenge), \textbf{HM3D v0.2} (1000 validation episodes with improved geometry and semantic labels), and \textbf{MP3D} (11 scenes, 2195 validation episodes, 21 goal categories). Metrics are SR and SPL (Equation~\ref{eq:spl}). Table~\ref{tab:wmnav_setup} lists the agent configuration; Gemini VLMs are used by default for their low cost and high effectiveness.
 
 {\renewcommand{\arraystretch}{1.2}
 \begin{table}[htbp]
@@ -1482,7 +1482,7 @@ Training & None (training-free, zero-shot; no detectors or pre-built maps) \\ \h
 
 \subsection{Results and Analysis}
 
-\paragraph{} \textbf{Comparison with the state of the art.} Table~\ref{tab:wmnav_sota} compares WMNav with supervised and zero-shot methods. WMNav outperforms all zero-shot methods, improving SR by 3.2 points and SPL by 3.2 points on HM3D and SR by 13.5 points and SPL by 1.1 points on MP3D over the previous best. Even including supervised methods, it achieves the best SR on MP3D and the best SPL on HM3D. The authors argue that LLM-based methods such as ESC \cite{esc} lose spatial detail when converting images to text; detector-based semantic maps (OpenFMNav) are complex and under-use the VLM; top-view inputs (TopV-Nav) do not exploit VLMs' egocentric training; whereas the simple Curiosity Value Map directly exploits the VLM's egocentric scene understanding.
+\paragraph{} \textbf{Comparison with the state of the art.} Table~\ref{tab:wmnav_sota} compares WMNav with supervised and zero-shot methods. WMNav outperforms all zero-shot methods, improving SR by 3.2 points and SPL by 3.2 points on HM3D and SR by 13.5 points and SPL by 1.1 points on MP3D over the previous best. Even including supervised methods, it achieves the best SR on MP3D and the best SPL on HM3D. The authors argue that LLM-based methods such as ESC lose spatial detail when converting images to text; detector-based semantic maps (OpenFMNav) are complex and under-use the VLM; top-view inputs (TopV-Nav) do not exploit VLMs' egocentric training; whereas the simple Curiosity Value Map directly exploits the VLM's egocentric scene understanding.
 
 {\renewcommand{\arraystretch}{1.25}
 \begin{table}[htbp]
@@ -1878,7 +1878,7 @@ Future research is expected to converge these paradigms: enriching explicit and 
 % ================= REFERENCES =================
 \begingroup
 \setstretch{1.15}
-\begin{thebibliography}{99}
+\begin{thebibliography}{9}
 \addcontentsline{toc}{chapter}{References}
 
 \bibitem{p1}
@@ -1892,171 +1892,6 @@ H. Lai, J. Cao, J. Xu, H. Wu, Y. Lin, T. Kong, Y. Yu, and W. Zhang, ``World Mode
 
 \bibitem{p4}
 D. Nie, X. Guo, Y. Duan, R. Zhang, and L. Chen, ``WMNav: Integrating Vision-Language Models into World Models for Object Goal Navigation,'' in \textit{Proc. IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}, 2025, pp. 2392--2399.
-
-\bibitem{johnson2000}
-S. H. Johnson, ``Thinking ahead: the case for motor imagery in prospective judgements of prehension,'' \textit{Cognition}, vol. 74, no. 1, pp. 33--70, 2000.
-
-\bibitem{ha2018}
-D. Ha and J. Schmidhuber, ``World models,'' \textit{arXiv preprint arXiv:1803.10122}, 2018.
-
-\bibitem{sutton1991}
-R. S. Sutton, ``Dyna, an integrated architecture for learning, planning, and reacting,'' \textit{ACM SIGART Bulletin}, vol. 2, no. 4, pp. 160--163, 1991.
-
-\bibitem{moerland2023}
-T. M. Moerland, J. Broekens, A. Plaat, and C. M. Jonker, ``Model-based reinforcement learning: A survey,'' \textit{Foundations and Trends in Machine Learning}, vol. 16, no. 1, pp. 1--118, 2023.
-
-\bibitem{hafner2019planet}
-D. Hafner, T. Lillicrap, I. Fischer, R. Villegas, D. Ha, H. Lee, and J. Davidson, ``Learning latent dynamics for planning from pixels,'' in \textit{Proc. International Conference on Machine Learning (ICML)}, 2019, pp. 2555--2565.
-
-\bibitem{hafner2019dreamer}
-D. Hafner, T. Lillicrap, J. Ba, and M. Norouzi, ``Dream to control: Learning behaviors by latent imagination,'' \textit{arXiv preprint arXiv:1912.01603}, 2019.
-
-\bibitem{hafner2020dreamerv2}
-D. Hafner, T. Lillicrap, M. Norouzi, and J. Ba, ``Mastering Atari with discrete world models,'' \textit{arXiv preprint arXiv:2010.02193}, 2020.
-
-\bibitem{hafner2023dreamerv3}
-D. Hafner, J. Pasukonis, J. Ba, and T. Lillicrap, ``Mastering diverse domains through world models,'' \textit{arXiv preprint arXiv:2301.04104}, 2023.
-
-\bibitem{sapien}
-F. Xiang, Y. Qin, K. Mo, Y. Xia, H. Zhu, F. Liu, M. Liu, H. Jiang, Y. Yuan, H. Wang, L. Yi, A. X. Chang, L. J. Guibas, and H. Su, ``SAPIEN: A simulated part-based interactive environment,'' in \textit{Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, 2020.
-
-\bibitem{isaacgym}
-V. Makoviychuk, L. Wawrzyniak, Y. Guo, M. Lu, K. Storey, M. Macklin, D. Hoeller, N. Rudin, A. Allshire, A. Handa, and G. State, ``Isaac Gym: High performance GPU based physics simulation for robot learning,'' in \textit{NeurIPS Datasets and Benchmarks Track}, 2021.
-
-\bibitem{chua2018}
-K. Chua, R. Calandra, R. McAllister, and S. Levine, ``Deep reinforcement learning in a handful of trials using probabilistic dynamics models,'' in \textit{Advances in Neural Information Processing Systems}, 2018, pp. 4754--4765.
-
-\bibitem{janner2019}
-M. Janner, J. Fu, M. Zhang, and S. Levine, ``When to trust your model: Model-based policy optimization,'' in \textit{Advances in Neural Information Processing Systems}, vol. 32, 2019.
-
-\bibitem{daydreamer}
-P. Wu, A. Escontrela, D. Hafner, P. Abbeel, and K. Goldberg, ``DayDreamer: World models for physical robot learning,'' in \textit{Proc. Conference on Robot Learning (CoRL)}, 2023, pp. 2226--2240.
-
-\bibitem{ditto}
-Z. Jiang, C.-C. Hsu, and Y. Zhu, ``Ditto: Building digital twins of articulated objects from interaction,'' in \textit{Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, 2022, pp. 5616--5626.
-
-\bibitem{sim2real2}
-L. Ma, J. Meng, S. Liu, W. Chen, J. Xu, and R. Chen, ``Sim2Real$^2$: Actively building explicit physics model for precise articulated object manipulation,'' in \textit{Proc. IEEE International Conference on Robotics and Automation (ICRA)}, 2023, pp. 11698--11704.
-
-\bibitem{nerf}
-B. Mildenhall, P. P. Srinivasan, M. Tancik, J. T. Barron, R. Ramamoorthi, and R. Ng, ``NeRF: Representing scenes as neural radiance fields for view synthesis,'' in \textit{Proc. European Conference on Computer Vision (ECCV)}, 2020.
-
-\bibitem{kerbl2023}
-B. Kerbl, G. Kopanas, T. Leimk\"uhler, and G. Drettakis, ``3D Gaussian splatting for real-time radiance field rendering,'' \textit{arXiv preprint arXiv:2308.04079}, 2023.
-
-\bibitem{manigaussian}
-G. Lu, S. Zhang, Z. Wang, C. Liu, J. Lu, and Y. Tang, ``ManiGaussian: Dynamic Gaussian splatting for multi-task robotic manipulation,'' \textit{arXiv preprint arXiv:2403.08321}, 2024.
-
-\bibitem{unisim}
-S. Yang, Y. Du, S. K. S. Ghasemipour, J. Tompson, D. Schuurmans, and P. Abbeel, ``Learning interactive real-world simulators,'' in \textit{NeurIPS Workshop on Generalization in Planning}, 2023.
-
-\bibitem{tdmpc2}
-N. Hansen, H. Su, and X. Wang, ``TD-MPC2: Scalable, robust world models for continuous control,'' \textit{arXiv preprint arXiv:2310.16828}, 2023.
-
-\bibitem{ppo}
-J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov, ``Proximal policy optimization algorithms,'' \textit{arXiv preprint arXiv:1707.06347}, 2017.
-
-\bibitem{gru}
-J. Chung, C. Gulcehre, K. Cho, and Y. Bengio, ``Empirical evaluation of gated recurrent neural networks on sequence modeling,'' \textit{arXiv preprint arXiv:1412.3555}, 2014.
-
-\bibitem{cem}
-Z. I. Botev, D. P. Kroese, R. Y. Rubinstein, and P. L'Ecuyer, ``The cross-entropy method for optimization,'' in \textit{Handbook of Statistics}, vol. 31. Elsevier, 2013, pp. 35--59.
-
-\bibitem{mppi}
-G. Williams, P. Drews, B. Goldfain, J. M. Rehg, and E. A. Theodorou, ``Aggressive driving with model predictive path integral control,'' in \textit{Proc. IEEE International Conference on Robotics and Automation (ICRA)}, 2016, pp. 1433--1440.
-
-\bibitem{icem}
-C. Pinneri, S. Sawant, S. Blaes, J. Achterhold, J. Stueckler, M. Rolinek, and G. Martius, ``Sample-efficient cross-entropy method for real-time planning,'' in \textit{Proc. Conference on Robot Learning (CoRL)}, PMLR vol. 155, 2021, pp. 1049--1065.
-
-\bibitem{eigengrasp}
-M. Ciocarlie, C. Goldfeder, and P. Allen, ``Dexterous grasping via eigengrasps: A low-dimensional approach to a high-complexity problem,'' in \textit{Robotics: Science and Systems Manipulation Workshop}, 2007.
-
-\bibitem{ddpm}
-J. Ho, A. Jain, and P. Abbeel, ``Denoising diffusion probabilistic models,'' in \textit{Advances in Neural Information Processing Systems}, vol. 33, 2020, pp. 6840--6851.
-
-\bibitem{ddim}
-J. Song, C. Meng, and S. Ermon, ``Denoising diffusion implicit models,'' \textit{arXiv preprint arXiv:2010.02502}, 2020.
-
-\bibitem{diffusionpolicy}
-C. Chi, Z. Xu, S. Feng, E. Cousineau, Y. Du, B. Burchfiel, R. Tedrake, and S. Song, ``Diffusion policy: Visuomotor policy learning via action diffusion,'' \textit{The International Journal of Robotics Research}, 2023.
-
-\bibitem{renderdiffuse}
-V. Vosylius, Y. Seo, J. Uru\c{c}, and S. James, ``Render and diffuse: Aligning image and action spaces for diffusion-based behaviour cloning,'' \textit{arXiv preprint arXiv:2405.18196}, 2024.
-
-\bibitem{tobin2017}
-J. Tobin, R. Fong, A. Ray, J. Schneider, W. Zaremba, and P. Abbeel, ``Domain randomization for transferring deep neural networks from simulation to the real world,'' in \textit{Proc. IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}, 2017, pp. 23--30.
-
-\bibitem{lee2020}
-J. Lee, J. Hwangbo, L. Wellhausen, V. Koltun, and M. Hutter, ``Learning quadrupedal locomotion over challenging terrain,'' \textit{Science Robotics}, vol. 5, no. 47, p. eabc5986, 2020.
-
-\bibitem{asymac}
-L. Pinto, M. Andrychowicz, P. Welinder, W. Zaremba, and P. Abbeel, ``Asymmetric actor critic for image-based robot learning,'' \textit{arXiv preprint arXiv:1710.06542}, 2017.
-
-\bibitem{anderson2018}
-P. Anderson, A. Chang, D. S. Chaplot, A. Dosovitskiy, S. Gupta, V. Koltun, J. Kosecka, J. Malik, R. Mottaghi, M. Savva, and A. R. Zamir, ``On evaluation of embodied navigation agents,'' \textit{arXiv preprint arXiv:1807.06757}, 2018.
-
-\bibitem{umpnet}
-Z. Xu, Z. He, and S. Song, ``Universal manipulation policy network for articulated objects,'' \textit{IEEE Robotics and Automation Letters}, vol. 7, no. 2, pp. 2447--2454, 2022.
-
-\bibitem{where2act}
-K. Mo, L. J. Guibas, M. Mukadam, A. Gupta, and S. Tulsiani, ``Where2Act: From pixels to actions for articulated 3D objects,'' in \textit{Proc. IEEE/CVF International Conference on Computer Vision (ICCV)}, 2021, pp. 6813--6823.
-
-\bibitem{vrb}
-S. Bahl, R. Mendonca, L. Chen, U. Jain, and D. Pathak, ``Affordances from human videos as a versatile representation for robotics,'' in \textit{Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, 2023, pp. 13778--13790.
-
-\bibitem{rodin}
-Hyper3D, ``Rodin: 3D generative model,'' [Online]. Available: https://hyper3d.ai/rodin
-
-\bibitem{liu2023rearticulable}
-S. Liu, S. Gupta, and S. Wang, ``Building rearticulable models for arbitrary 3D objects from 4D point clouds,'' in \textit{Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, 2023, pp. 21138--21147.
-
-\bibitem{vhacd}
-K. Mamou and F. Ghorbel, ``A simple and efficient approach for 3D mesh approximate convex decomposition,'' in \textit{Proc. IEEE International Conference on Image Processing (ICIP)}, 2009, pp. 3501--3504.
-
-\bibitem{dexgraspnet}
-R. Wang, J. Zhang, J. Chen, Y. Xu, P. Li, T. Liu, and H. Wang, ``DexGraspNet: A large-scale robotic dexterous grasp dataset for general objects based on simulation,'' in \textit{Proc. IEEE International Conference on Robotics and Automation (ICRA)}, 2023, pp. 11359--11366.
-
-\bibitem{screwnet}
-A. Jain, R. Lioutikov, C. Chuck, and S. Niekum, ``ScrewNet: Category-independent articulation model estimation from depth images using screw theory,'' in \textit{Proc. IEEE International Conference on Robotics and Automation (ICRA)}, 2021, pp. 13670--13677.
-
-\bibitem{act3d}
-T. Gervet, Z. Xian, N. Gkanatsios, and K. Fragkiadaki, ``Act3D: Infinite resolution action detection transformer for robotic manipulation,'' \textit{arXiv preprint arXiv:2306.17817}, 2023.
-
-\bibitem{mast3r}
-V. Leroy, Y. Cabon, and J. Revaud, ``Grounding image matching in 3D with MASt3R,'' in \textit{Proc. European Conference on Computer Vision (ECCV)}, 2024, pp. 71--91.
-
-\bibitem{dpt}
-R. Ranftl, A. Bochkovskiy, and V. Koltun, ``Vision transformers for dense prediction,'' \textit{arXiv preprint}, 2021.
-
-\bibitem{gicp}
-A. V. Segal, D. H\"ahnel, and S. Thrun, ``Generalized-ICP,'' in \textit{Robotics: Science and Systems}, 2009.
-
-\bibitem{rlbench}
-S. James, Z. Ma, D. R. Arrojo, and A. J. Davison, ``RLBench: The robot learning benchmark \& learning environment,'' \textit{IEEE Robotics and Automation Letters}, vol. 5, no. 2, pp. 3019--3026, 2020.
-
-\bibitem{parkour}
-X. Cheng, K. Shi, A. Agarwal, and D. Pathak, ``Extreme parkour with legged robots,'' in \textit{Proc. IEEE International Conference on Robotics and Automation (ICRA)}, 2024, pp. 11443--11450.
-
-\bibitem{rudin2022}
-N. Rudin, D. Hoeller, P. Reist, and M. Hutter, ``Learning to walk in minutes using massively parallel deep reinforcement learning,'' in \textit{Proc. Conference on Robot Learning (CoRL)}, 2022, pp. 91--100.
-
-\bibitem{amp}
-A. Escontrela, X. B. Peng, W. Yu, T. Zhang, A. Iscen, K. Goldberg, and P. Abbeel, ``Adversarial motion priors make good substitutes for complex reward functions,'' in \textit{Proc. IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}, 2022, pp. 25--32.
-
-\bibitem{vlfm}
-N. Yokoyama, S. Ha, D. Batra, J. Wang, and B. Bucher, ``VLFM: Vision-language frontier maps for zero-shot semantic navigation,'' in \textit{Proc. IEEE International Conference on Robotics and Automation (ICRA)}, 2024, pp. 42--48.
-
-\bibitem{vlmnav}
-D. Goetting, H. G. Singh, and A. Loquercio, ``End-to-end navigation with vision language models: Transforming spatial reasoning into question-answering,'' \textit{arXiv preprint arXiv:2411.05755}, 2024.
-
-\bibitem{hm3d}
-S. K. Ramakrishnan, A. Gokaslan, E. Wijmans, O. Maksymets, A. Clegg, J. M. Turner, E. Undersander, W. Galuba, A. Westbury, A. X. Chang, M. Savva, Y. Zhao, and D. Batra, ``Habitat-Matterport 3D dataset (HM3D): 1000 large-scale 3D environments for embodied AI,'' in \textit{NeurIPS Datasets and Benchmarks Track}, 2021.
-
-\bibitem{mp3d}
-A. Chang, A. Dai, T. Funkhouser, M. Halber, M. Niessner, M. Savva, S. Song, A. Zeng, and Y. Zhang, ``Matterport3D: Learning from RGB-D data in indoor environments,'' in \textit{Proc. International Conference on 3D Vision (3DV)}, 2017.
-
-\bibitem{esc}
-K. Zhou, K. Zheng, C. Pryor, Y. Shen, H. Jin, L. Getoor, and X. E. Wang, ``ESC: Exploration with soft commonsense constraints for zero-shot object navigation,'' \textit{arXiv preprint arXiv:2301.13166}, 2023.
 
 \end{thebibliography}
 \endgroup
