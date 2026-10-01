@@ -28,6 +28,19 @@
     gsap.ticker.lagSmoothing(0);
   }
 
+  /* "#home" sits inside the hero's pin wrapper, so once the pin has run its
+     offset is the pin's end, not the page top. Send those links to 0 instead. */
+  if (!reduceMotion) {
+    $$('a[href="#home"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation(); // keep Lenis' own anchor handler (on window) out of it
+        if (window.__lenis) window.__lenis.scrollTo(0);
+        else window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  }
+
   /* ── Scroll-progress line in the nav ──────────────────────────────── */
   gsap.to('.n-progress', {
     scaleX: 1, ease: 'none',
