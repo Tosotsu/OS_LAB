@@ -18,15 +18,15 @@ Cost preflights (`get_cost`, no job submitted): Seedream 4.5 basic 16:9 = 1 cred
 
 ## Assets
 
-| File | Source | Size (validated build) |
+| File | Source | Size |
 |---|---|---|
 | `assets/hero.mp4` | video f072c0ee → H.264, `-g 1 -crf 26 -an -movflags +faststart` (desktop scrub) | 4.03 MB |
-| `assets/hero.webm` | video f072c0ee → VP9, keyframe every 6 frames, CRF 44 (scrub fallback) | ~1.49 MB |
+| `assets/hero.webm` | video f072c0ee → VP9, keyframe every 6 frames, CRF 44 (scrub fallback) | 1.49 MB |
 | `assets/hero-loop.mp4` / `.webm` | video f072c0ee → forward+reverse loop, 540p (mobile autoplay) | 0.74 MB / 0.66 MB |
-| `assets/hero-poster.webp` | first frame of the video | 77 KB |
-| `assets/monitoring.webp` | still b (aa811394), 1600 px | 37 KB |
+| `assets/hero-poster.webp` | first frame of the video | 73 KB |
+| `assets/monitoring.webp` | still b (aa811394), 1600 px | 35 KB |
 | `assets/screening.svg` | generated locally (0 credits) | 21 KB |
 | `assets/vasp.svg` | generated locally (0 credits) | 10 KB |
 
 Still (a) (7f761aa4) is used only as the video's start frame; the poster is the video's own first frame.
-The video and WebP files are produced by `./build-assets.sh` (this cloud session's network policy blocks the Higgsfield CDN, so they could not be downloaded here).
+The video and WebP files were produced by `./build-assets.sh` (downloads the generations from Higgsfield and encodes them; re-run it to rebuild).

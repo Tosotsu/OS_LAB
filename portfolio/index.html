@@ -291,7 +291,13 @@
       .n-links, .n-cv { display: none; }
       .ham { display: flex; }
       #home { padding-inline: 1.5rem; }
-      .h-media > * { object-position: 64% 50%; }
+      /* portrait crop: keep the flagged node in frame, and shade evenly since text spans the full width */
+      .h-media > * { object-position: 70% 50%; }
+      .h-shade {
+        background:
+          linear-gradient(180deg, rgba(7,9,15,.5) 0%, rgba(7,9,15,.68) 32%, rgba(7,9,15,.82) 62%, var(--bg) 100%),
+          linear-gradient(90deg, rgba(7,9,15,.5) 0%, rgba(7,9,15,.15) 100%);
+      }
     }
   </style>
 </head>
