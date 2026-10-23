@@ -1,9 +1,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[12pt,a4paper,final]{extreport}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{txfonts}
 \usepackage{bm}
 \usepackage{array}
 \usepackage{setspace}
@@ -271,11 +273,9 @@ I also express my sincere gratitude to all my friends and my parents for their c
 % ================= TOC / LISTS =================
 \thispagestyle{plain}
 \begingroup
-\setstretch{1.04}
 \tableofcontents
 \endgroup
 \begingroup
-\setstretch{1.2}
 \listoffigures
 \addcontentsline{toc}{chapter}{List of Figures}
 \listoftables
@@ -287,7 +287,6 @@ I also express my sincere gratitude to all my friends and my parents for their c
 \addcontentsline{toc}{chapter}{List of Abbreviations}
 
 \begingroup
-\setstretch{1.25}
 \setlength{\LTleft}{0pt}\setlength{\LTright}{\fill}
 \begin{longtable}{p{2.6cm}l}
 \textbf{3DGS} & 3D Gaussian Splatting \\
@@ -322,18 +321,17 @@ I also express my sincere gratitude to all my friends and my parents for their c
 \lhead{NeRF in Home and Interior Design}
 \chead{}
 \rhead{}
-\lfoot{\textit{Dept. of CSE, SNMIMT}}
-\cfoot{}
-\rfoot{\thepage}
+\lfoot{}
+\cfoot{\thepage}
+\rfoot{}
 \renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
 \pagestyle{fancy}
 \fancypagestyle{plain}{%
   \fancyhf{}%
-  \lfoot{\textit{Dept. of CSE, SNMIMT}}%
-  \rfoot{\thepage}%
+  \cfoot{\thepage}%
   \renewcommand{\headrulewidth}{0pt}%
-  \renewcommand{\footrulewidth}{0.4pt}}
+  \renewcommand{\footrulewidth}{0pt}}
 \titleformat{\chapter}[display]
   {\normalfont\huge\bfseries\filcenter}
   {\chaptername\ \thechapter}{1ex}{\Huge}
@@ -549,7 +547,7 @@ User studies & Perceived quality and layout & \cite{p1,p2} \\ \hline
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\textwidth]{figs/p1_aq.png}
+\includegraphics[width=0.45\textwidth]{figs/p1_aq.png}
 \caption[Application-Querying with a GUI-style visual prompt]{Application-Querying with a GUI-style visual prompt \cite{p1}}
 \label{fig:p1_aq}
 \end{figure}
@@ -828,7 +826,7 @@ The method runs in three stages (Figure~\ref{fig:p4_pipeline}) \cite{p4}.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.64\textwidth]{figs/p4_pipeline.png}
+\includegraphics[width=0.56\textwidth]{figs/p4_pipeline.png}
 \caption[Three-stage pipeline of Behind the Veil]{Three-stage pipeline of Behind the Veil \cite{p4}}
 \label{fig:p4_pipeline}
 \end{figure}
@@ -848,7 +846,7 @@ The method runs in three stages (Figure~\ref{fig:p4_pipeline}) \cite{p4}.
 
 \subsection{Results and Analysis}
 
-\paragraph{} Completeness rises from 76.5 for BNV-Fusion to 89.3 on 3D-CRS and from 72.3 to 89.8 on iTHOR, giving the best F1 on every test scene (Table~\ref{tab:p4_main}). Accuracy is slightly below BNV-Fusion's because it also covers the harder inpainted regions. Baselines leave holes behind sofas and under furniture, whereas Behind the Veil completes planar areas and thin structures alike, leaving a complete room layout after furniture removal (Figure~\ref{fig:p4_layout}) \cite{p4}.
+\paragraph{} Completeness rises from 76.5 for BNV-Fusion to 89.3 on 3D-CRS and from 72.3 to 89.8 on iTHOR, giving the best F1 on every test scene (Table~\ref{tab:p4_main}). Accuracy is slightly below BNV-Fusion's because it also covers the harder inpainted regions. Baselines leave holes behind sofas and under furniture, whereas Behind the Veil completes planar areas and thin structures alike, leaving a complete room layout even after furniture is removed \cite{p4}.
 
 {\renewcommand{\arraystretch}{1.12}
 \begin{table}[htbp]
@@ -865,13 +863,6 @@ BNV-Fusion & \textbf{92.5} & 76.5 & 83.7 & \textbf{91.3} & 72.3 & 80.7 \\ \hline
 Behind the Veil & 90.4 & \textbf{89.3} & \textbf{89.9} & 88.8 & \textbf{89.8} & \textbf{89.3} \\ \hline
 \end{tabular}
 \end{table}}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.5\textwidth]{figs/p4_layout.png}
-\caption[Room layout after furniture removal]{Room layout after furniture removal \cite{p4}}
-\label{fig:p4_layout}
-\end{figure}
 
 \paragraph{} \textbf{Fewer depth frames.} With only 50 depth frames per scene, BNV-Fusion's completeness falls from 76.5 to 62.3, whereas Behind the Veil stays above 87.5 because its Inpainter fills what the frames miss (Figure~\ref{fig:p4_frames}) \cite{p4}.
 
@@ -1071,7 +1062,7 @@ Behind the Veil & Completes hidden surfaces; generalises from few rooms; clean m
 
 \paragraph{} \textbf{3D-RE-GEN} reconstructs an editable room with separate, ground-aligned furniture and a complete background from a single image, using Application-Querying and a 4-DoF planar optimisation \cite{p1}. \textbf{HouseCrafter} lifts a 2D floorplan into a multi-room house by generating consistent RGB-D views with a floorplan-guided diffusion model and fusing them into a mesh \cite{p2}. \textbf{Gaussian Splatting SLAM} builds a photorealistic Gaussian map live from a single camera with analytic pose Jacobians and isotropic regularisation \cite{p3}. \textbf{Behind the Veil} completes the surfaces hidden behind and beneath furniture with a coarse-fine octree and a cross-scene 3D Inpainter \cite{p4}.
 
-\paragraph{} Together, these works show that the bottlenecks of legacy CAD modelling and photogrammetry---manual effort, expensive capture, incomplete and non-editable meshes---can be overcome by learned 3D priors. They are complementary: generative methods minimise input, reconstructive methods ensure fidelity, and their combination points towards complete, photorealistic, and editable digital twins of homes. Faster and unified pipelines that also model materials and lighting will make such tools practical for everyday virtual staging, real-estate walkthroughs, and automated spatial design.
+\paragraph{} Together, these works show that the bottlenecks of legacy CAD modelling and photogrammetry, namely manual effort, expensive capture, and incomplete, non-editable meshes, can be overcome by learned 3D priors. They are complementary: generative methods minimise input, reconstructive methods ensure fidelity, and their combination points towards complete, photorealistic, and editable digital twins of homes. Faster and unified pipelines that also model materials and lighting will make such tools practical for everyday virtual staging, real-estate walkthroughs, and automated spatial design.
 
 % ================= REFERENCES =================
 \begingroup
