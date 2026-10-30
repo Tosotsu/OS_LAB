@@ -23,6 +23,7 @@
 \usepackage{caption}
 \usepackage{enumitem}
 \usepackage{etoolbox}
+\usepackage{pdfpages}
 \usepackage{titlesec}
 \usepackage{tocloft}
 \usepackage{fancyhdr}
@@ -96,73 +97,11 @@
 \sloppy
 
 %=====================================================================
-% TITLE PAGE
+% TITLE PAGE AND CERTIFICATE (pages 1-2, layout from the supplied Word certificate;
+% edit cover_pages.docx and re-export it to cover_pages.pdf to change them)
 %=====================================================================
 \pagenumbering{gobble}
-\thispagestyle{empty}
-\begin{center}
-\linespread{1}\selectfont
-\setlength{\parskip}{0pt}
-\vspace*{-3.5pt}
-{\bfseries\fontsize{16}{19.2}\selectfont HEMPCRETE IS A SUSTAINABLE MATERIAL}\\[16.3pt]
-{\bfseries\fontsize{12}{14.4}\selectfont SEMINAR REPORT}\\[11.4pt]
-{\fontsize{12}{14.4}\selectfont Submitted by}\\[38.8pt]
-{\bfseries\fontsize{14}{16.8}\selectfont ARYAN O S}\\[14.0pt]
-{\bfseries\fontsize{12}{14.4}\selectfont SNM23CE003}\\[13.2pt]
-{\fontsize{12}{14.4}\selectfont To}\\[24.7pt]
-{\fontsize{12}{14.4}\selectfont The APJ Abdul Kalam Technological University}\\[22.1pt]
-{\fontsize{12}{14.4}\selectfont In partial fulfillment of the requirements for the award of the Degree of}\\[11.3pt]
-{\fontsize{12}{14.4}\selectfont Bachelor of Technology In}\\[11.4pt]
-{\itshape\fontsize{12}{14.4}\selectfont Civil Engineering}\\[26pt]
-\includegraphics[height=3.8cm]{snmlogo.png}\\[27.7pt]
-{\bfseries\fontsize{14}{16.8}\selectfont Department of Civil Engineering}\\[32.4pt]
-{\bfseries\fontsize{14}{16.8}\selectfont SREE NARAYANA MANGALAM INSTITUTE OF MANAGEMENT}\\[19.9pt]
-{\bfseries\fontsize{14}{16.8}\selectfont \& TECHNOLOGY}\\[33.5pt]
-{\bfseries\fontsize{14}{16.8}\selectfont MALIANKARA}\\[40.3pt]
-{\fontsize{14}{16.8}\selectfont SEPTEMBER, 2026}
-\end{center}
-
-%=====================================================================
-% CERTIFICATE
-%=====================================================================
-\newpage
-\thispagestyle{empty}
-\begin{center}
-\linespread{1}\selectfont
-\setlength{\parskip}{0pt}
-\vspace*{20.4pt}
-{\bfseries\fontsize{14}{16.8}\selectfont DEPARTMENT OF CIVIL ENGINEERING}\\[45.7pt]
-{\bfseries\fontsize{14}{16.8}\selectfont SREE NARAYANA MANGALAM INSTITUTE OF MANAGEMENT}\\[4.1pt]
-{\bfseries\fontsize{14}{16.8}\selectfont \& TECHNOLOGY, MALIANKARA}\\[32.6pt]
-\includegraphics[height=3.8cm]{snmlogo.png}\\[27.7pt]
-{\bfseries\fontsize{18}{21.6}\selectfont CERTIFICATE}
-\end{center}
-\vspace{-6.7pt}
-
-{\linespread{1.4276}\selectfont
-This is to certify that the seminar report entitled \textbf{`HEMPCRETE IS A SUSTAINABLE
-MATERIAL'} submitted by \textbf{`ARYAN O S (SNM23CE003)'} to the APJ Abdul Kalam
-Technological University in partial fulfillment of the requirements for the award of the
-Degree of Bachelor of Technology in Civil Engineering is a bonafide record of the
-seminar work carried out by her under our guidance and supervision. This report in any
-form has not been submitted to any other universities or institutions for any purpose.\par}
-
-\vspace{68.6pt}
-\noindent
-\begin{minipage}[t]{0.48\textwidth}\centering
-\linespread{1}\selectfont
-{\bfseries MARY RESHMA}\\[-0.8pt] Seminar Guide
-\end{minipage}\hfill
-\begin{minipage}[t]{0.48\textwidth}\centering
-\linespread{1}\selectfont
-{\bfseries LAKSHMY KAKKANATT}\\[-0.8pt] Seminar Coordinator
-\end{minipage}
-
-\vspace{33.4pt}
-\begin{center}
-\linespread{1}\selectfont
-{\bfseries JESNA K U}\\[-0.8pt] Head of Department
-\end{center}
+\includepdf[pages=1-2,pagecommand={\thispagestyle{empty}}]{cover_pages.pdf}
 
 %=====================================================================
 % ACKNOWLEDGEMENT
